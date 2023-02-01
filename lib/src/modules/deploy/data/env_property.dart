@@ -7,14 +7,12 @@ class EnvProperty {
   final String? defaultValue;
 
   final bool required;
-  final bool loadFromEnv;
 
   const EnvProperty(
     this.key, {
     this.value,
     this.defaultValue,
-    this.required = false,
-    this.loadFromEnv = true,
+    this.required = true,
   });
 
   /// See issue: https://github.com/flutter/flutter/issues/55870
@@ -35,14 +33,12 @@ class EnvProperty {
     String? value,
     String? defaultValue,
     bool? required,
-    bool? loadFromEnv,
   }) {
     return EnvProperty(
       key,
       value: value ?? this.value,
       defaultValue: defaultValue ?? this.defaultValue,
       required: required ?? this.required,
-      loadFromEnv: loadFromEnv ?? this.loadFromEnv,
     );
   }
 }

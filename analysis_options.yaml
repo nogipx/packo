@@ -176,7 +176,7 @@ linter:
     non_constant_identifier_names: true
     null_closures: true
     omit_local_variable_types: true
-    one_member_abstracts: true
+    one_member_abstracts: false
     only_throw_errors: true
     overridden_fields: true
     package_api_docs: true

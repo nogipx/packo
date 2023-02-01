@@ -1,7 +1,7 @@
 import 'package.dart';
 
-export 'deploy/_index.dart';
 export 'extension.dart';
+export 'modules/_index.dart';
 export 'package.dart';
 export 'publish.dart';
 export 'shell/_index.dart';
