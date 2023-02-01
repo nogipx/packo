@@ -55,12 +55,15 @@ class StepRunActualBuild extends BaseBuildStep {
       }
 
       final outputDir = Directory(outputDirPath);
-      if (outputDir.existsSync()) {
-        await shell.runWithoutFlutter(
-          'cp',
-          '-a build/app/outputs/apk/$outputEndpoint ${outputDir.path}',
-        );
+      if (!outputDir.existsSync()) {
+        await outputDir.create(recursive: true);
       }
+
+      print('\nOutput directory: ${outputDir.absolute.path}\n');
+      await shell.runWithoutFlutter(
+        'cp',
+        '-a build/app/outputs/apk/$outputEndpoint ${outputDir.path}',
+      );
     }
   }
 }
