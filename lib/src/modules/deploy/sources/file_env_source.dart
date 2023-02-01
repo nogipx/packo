@@ -14,8 +14,6 @@ class FileEnvPropertySource implements EnvPropertySource {
 
   @override
   FutureOr<Iterable<EnvProperty>> loadProperties() {
-    _guardEnvFileAvailable(envFilePath);
-
     Iterable<EnvProperty> result = {};
 
     try {
