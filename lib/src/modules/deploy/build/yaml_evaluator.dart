@@ -43,7 +43,7 @@ class YamlEvaluator extends ExpressionEvaluator {
 
   String _prefixed(List<String> cmd, String value) {
     final prefix = _getPrefix(cmd);
-    return '$prefix$value';
+    return value.isNotEmpty ? '$prefix$value' : '';
   }
 
   String _getPrefix(List<String> cmd) {

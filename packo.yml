@@ -3,7 +3,7 @@ artifactsOutputsDirectory: /Users/nogipx/Documents/Projects/nogipx/packo/apk_bui
 requiredEnv:
   - BUNDLE_ID_SUFFIX
   - APP_NAME
-  - ENVIRONMENT
+#  - ENVIRONMENT
   - OUTPUT_APK
 envFile: test.env
 initialEnv:
