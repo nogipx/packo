@@ -17,11 +17,6 @@ class StepCollectEnvProperties
       loadedProps.addAll(env);
     }
 
-    loadedProps.addAll([
-      EnvProperty('BUILD_TYPE', value: data.settings.type.name),
-      EnvProperty('BUILD_PLATFORM', value: data.settings.platform.name),
-    ]);
-
     data.env.addAll(loadedProps.toSet());
 
     return data;

@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:expressions/expressions.dart';
 import 'package:intl/intl.dart';
 
@@ -14,33 +15,55 @@ class YamlEvaluator extends ExpressionEvaluator {
     MemberExpression expression,
     Map<String, dynamic> context,
   ) {
-    final variable = expression.toString();
+    _guardInterpolation(expression.toString());
+    final cmd = expression.toString().split('.');
 
-    if (variable.startsWith('env.')) {
-      final envCommand = variable.replaceFirst('env.', '').split('.');
-      if (envCommand.isEmpty) {
-        throw Exception('Invalid interpolation: $variable');
-      }
-
-      final envKey = envCommand.last;
-
-      var prefix = '';
-
-      if (envCommand.contains('dot')) {
-        prefix = '.';
-      }
-
-      return env.containsKey(envKey) ? '$prefix${env[envKey]}' : '';
+    if (cmd.first == 'env') {
+      final envKey = cmd.last;
+      final value = _prefixed(cmd, _getEnv(envKey));
+      return value;
     }
 
-    if (variable.startsWith('datetime.')) {
-      final dtVariable = variable.replaceFirst('datetime.', '');
-      if (dtVariable == 'nowFull') {
-        final date = DateFormat('yyyy.MM.dd-HH.mm').format(DateTime.now());
-        return date;
+    if (cmd.first == 'datetime') {
+      final formats = {
+        'nowFull': DateFormat('yyyy.MM.dd-HH.mm'),
+      };
+
+      final name = cmd.firstWhereOrNull(formats.keys.contains);
+      final format = formats[name];
+
+      if (format != null) {
+        final date = format.format(DateTime.now());
+        return _prefixed(cmd, date);
       }
     }
 
     return super.evalMemberExpression(expression, context);
+  }
+
+  String _prefixed(List<String> cmd, String value) {
+    final prefix = _getPrefix(cmd);
+    return '$prefix$value';
+  }
+
+  String _getPrefix(List<String> cmd) {
+    const prefixes = {
+      'dot': '.',
+      'dash': '-',
+      'us': '_',
+    };
+    final names = prefixes.keys;
+
+    final name = cmd.firstWhereOrNull(names.contains);
+
+    return name != null ? prefixes[name] ?? '' : '';
+  }
+
+  String _getEnv(String envKey) => env[envKey] ?? '';
+
+  void _guardInterpolation(String command) {
+    if (command.split('.').isEmpty) {
+      throw Exception('Invalid interpolation: $command');
+    }
   }
 }

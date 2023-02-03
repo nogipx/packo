@@ -4,8 +4,6 @@ import 'package:packo/packo.dart';
 class ConsolePrinterStepListener implements StepListener {
   final Logger logger;
 
-  static final _ansi = Ansi(true);
-
   ConsolePrinterStepListener(this.logger);
 
   BuildStep? _lastStep;

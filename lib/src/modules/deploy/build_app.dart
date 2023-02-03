@@ -35,6 +35,7 @@ Future<void> buildApp({
 
   final buildCompositor = BuildCompositor()
     ..setNext(collectEnvStep)
+    ..setNext(StepInjectSystemProperties())
     ..setNext(normalizeEnvStep)
     ..setNext(transformEnvStep)
     ..setNext(guardEnvStep)

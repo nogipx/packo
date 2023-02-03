@@ -45,6 +45,8 @@ abstract class DeployUtils {
           )
           .toString();
 
+      context[key] = newValue;
+
       final newEntry = MapEntry(
         key,
         EnvProperty(key, value: newValue != 'null' ? newValue : value),
