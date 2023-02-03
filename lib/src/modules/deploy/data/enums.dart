@@ -1,10 +1,12 @@
+import 'package:collection/collection.dart';
+
 enum BuildPlatform {
   appbundle,
   apk,
   ipa;
 
-  static BuildPlatform fromName(String name) =>
-      BuildPlatform.values.firstWhere((e) => e.name == name);
+  static BuildPlatform? parse(String? name) =>
+      BuildPlatform.values.firstWhereOrNull((e) => e.name == name);
 }
 
 enum BuildType {
@@ -12,6 +14,6 @@ enum BuildType {
   profile,
   release;
 
-  static BuildType fromName(String name) =>
-      BuildType.values.firstWhere((e) => e.name == name);
+  static BuildType? parse(String? name) =>
+      BuildType.values.firstWhereOrNull((e) => e.name == name);
 }

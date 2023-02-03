@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:packo/packo.dart';
 
+import 'commands/build/build_command.dart';
 import 'commands/runner/build_runner_command.dart';
 import 'commands/sync/increment_command.dart';
 import 'commands/sync/sync_command.dart';
@@ -24,7 +25,8 @@ Future<void> main(List<String> arguments) async {
       },
     ))
     ..addCommand(IncrementVersionsCommand(entrypoint))
-    ..addCommand(StartBuildRunnerCommand(entrypoint));
+    ..addCommand(StartBuildRunnerCommand(entrypoint))
+    ..addCommand(BuildAppCommand());
 
   await runner.run(arguments).catchError((Object error) {
     if (error is! UsageException) throw error;

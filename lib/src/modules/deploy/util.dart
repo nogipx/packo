@@ -10,4 +10,18 @@ abstract class DeployUtils {
     }
     return targetPropsMap;
   }
+
+  static FastMapEnvProperty fastPropertiesFromMap(Map<String, String> props) {
+    final env = Map.fromEntries(props.entries.map(
+      (e) => MapEntry(
+        e.key,
+        EnvProperty(
+          e.key,
+          value: e.value,
+        ),
+      ),
+    ));
+
+    return env;
+  }
 }

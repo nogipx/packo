@@ -12,12 +12,14 @@ class StepRunActualBuild extends BaseBuildStep {
   @override
   FutureOr<BuildTransaction> handle(BuildTransaction data) async {
     final dartDefineString = data.env.map((e) => e.dartDefine).join(' ');
-    final cmd =
-        'build ${data.platform.name} --${data.type.name} $dartDefineString'
-            .trim();
+    final cmdBuffer = StringBuffer()
+      ..write('build ${data.settings.platform.name} ')
+      ..write('--${data.settings.type.name} $dartDefineString');
+
+    final cmd = cmdBuffer.toString().trim();
 
     final shell = FlutterShell(
-      workingDirectory: data.directory,
+      workingDirectory: data.settings.directory,
     )..open();
     shell.eventStream.listen(print);
 
@@ -26,7 +28,7 @@ class StepRunActualBuild extends BaseBuildStep {
     if (customOutputPath != null) {
       await _copyBuildToCustomOutput(
         customOutputPath,
-        data.type,
+        data.settings.type,
         shell,
       );
     }
