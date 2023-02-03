@@ -6,7 +6,6 @@ requiredEnv:
   - ENVIRONMENT
 envFile: test.env
 initialEnv:
-  BUNDLE_ID_SUFFIX: "(ENVIRONMENT != null ? '.' + ENVIRONMENT : '')"
-#  APP_NAME: "TestEnv"
-  APP_NAME: "'TestEnv' + (BUILD_TYPE != 'release' ? '.' + BUILD_TYPE : '')"
+  BUNDLE_ID_SUFFIX: "env.dot.ENVIRONMENT"
+  APP_NAME: "'TestEnv' + (env.BUILD_TYPE != 'release' ? env.dot.BUILD_TYPE : '') + '-' + datetime.nowFull"
 

@@ -38,11 +38,7 @@ abstract class DeployUtils {
       ..addAll(initialEnv);
 
     final interpolated = initialEnv.map((key, value) {
-      final newValue = const CustomEvaluator(
-        memberAccessors: [
-          MemberAccessor.mapAccessor,
-        ],
-      )
+      final newValue = YamlEvaluator(env: context)
           .eval(
             Expression.parse(value),
             context,
@@ -61,22 +57,5 @@ abstract class DeployUtils {
       ...data,
       ...interpolated,
     };
-  }
-}
-
-class CustomEvaluator extends ExpressionEvaluator {
-  const CustomEvaluator({super.memberAccessors = const []});
-
-  @override
-  dynamic evalMemberExpression(
-      MemberExpression expression, Map<String, dynamic> context) {
-    final prop = expression.property.name;
-    if (prop.startsWith('dt-')) {
-      final dtFormat = prop.replaceFirst('dt-', '-');
-      final date = DateFormat(dtFormat).format(DateTime.now());
-      return date;
-    }
-
-    return super.evalMemberExpression(expression, context);
   }
 }

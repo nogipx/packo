@@ -1,13 +1,5 @@
 import 'package:cli_util/cli_logging.dart';
 import 'package:packo/packo.dart';
-import 'package:packo/src/modules/deploy/build_step_listener.dart';
-import 'package:packo/src/modules/deploy/steps/build/move_artifacts.dart';
-
-final listener = ConsolePrinterStepListener(
-  Logger.verbose(
-    ansi: Ansi(true),
-  ),
-);
 
 Future<void> buildApp({
   required BuildSettings settings,
@@ -51,6 +43,10 @@ Future<void> buildApp({
 
   await buildCompositor.run(
     settings: settings,
-    listener: listener,
+    listener: ConsolePrinterStepListener(
+      Logger.verbose(
+        ansi: Ansi(true),
+      ),
+    ),
   );
 }
