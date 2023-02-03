@@ -1,6 +1,8 @@
 import 'package:packo/packo.dart';
 
-class StepCollectEnvProperties extends BaseBuildStep {
+class StepCollectEnvProperties
+    with VerboseStep
+    implements BuildStep<BuildTransaction> {
   final Iterable<EnvPropertySource> sources;
 
   StepCollectEnvProperties({
@@ -15,8 +17,13 @@ class StepCollectEnvProperties extends BaseBuildStep {
       loadedProps.addAll(env);
     }
 
+    loadedProps.addAll([
+      EnvProperty('BUILD_TYPE', value: data.settings.type.name),
+      EnvProperty('BUILD_PLATFORM', value: data.settings.platform.name),
+    ]);
+
     data.env.addAll(loadedProps.toSet());
 
-    return super.handle(data);
+    return data;
   }
 }

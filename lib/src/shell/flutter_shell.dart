@@ -66,7 +66,7 @@ class FlutterShell {
     );
   }
 
-  void close() async {
+  Future<void> close() async {
     _shell?.kill();
     _shell = null;
     _lines?.close();

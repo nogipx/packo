@@ -12,7 +12,7 @@ analyzer:
     always_use_package_imports: error
     avoid_dynamic_calls: warning
     avoid_empty_else: error
-    avoid_print: warning
+    avoid_print: ignore
     avoid_relative_lib_imports: error
     avoid_returning_null_for_future: error
     avoid_slow_async_io: error

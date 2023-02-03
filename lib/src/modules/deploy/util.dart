@@ -1,3 +1,7 @@
+import 'package:expressions/expressions.dart';
+import 'package:intl/intl.dart';
+import 'package:packo/packo.dart';
+
 import '_index.dart';
 
 typedef FastMapEnvProperty = Map<String, EnvProperty>;
@@ -23,5 +27,56 @@ abstract class DeployUtils {
     ));
 
     return env;
+  }
+
+  static FastMapEnvProperty interpolateEnvValues(
+    FastMapEnvProperty data,
+    Map<String, String> initialEnv,
+  ) {
+    final context = data
+        .map((key, value) => MapEntry(key, value.value ?? value.defaultValue))
+      ..addAll(initialEnv);
+
+    final interpolated = initialEnv.map((key, value) {
+      final newValue = const CustomEvaluator(
+        memberAccessors: [
+          MemberAccessor.mapAccessor,
+        ],
+      )
+          .eval(
+            Expression.parse(value),
+            context,
+          )
+          .toString();
+
+      final newEntry = MapEntry(
+        key,
+        EnvProperty(key, value: newValue != 'null' ? newValue : value),
+      );
+      print('Expanded value: ${newEntry.value}');
+      return newEntry;
+    });
+
+    return {
+      ...data,
+      ...interpolated,
+    };
+  }
+}
+
+class CustomEvaluator extends ExpressionEvaluator {
+  const CustomEvaluator({super.memberAccessors = const []});
+
+  @override
+  dynamic evalMemberExpression(
+      MemberExpression expression, Map<String, dynamic> context) {
+    final prop = expression.property.name;
+    if (prop.startsWith('dt-')) {
+      final dtFormat = prop.replaceFirst('dt-', '-');
+      final date = DateFormat(dtFormat).format(DateTime.now());
+      return date;
+    }
+
+    return super.evalMemberExpression(expression, context);
   }
 }

@@ -1,7 +1,13 @@
 import 'package:packo/packo.dart';
 
-class StepGuardEnvProperties extends BaseBuildStep {
+class StepGuardEnvProperties
+    with VerboseStep
+    implements BuildStep<BuildTransaction> {
   final Set<EnvProperty> requiredProperties;
+
+  @override
+  String get description =>
+      'Filling properties with default values and adding missing properties.';
 
   StepGuardEnvProperties({
     this.requiredProperties = const {},
@@ -17,7 +23,7 @@ class StepGuardEnvProperties extends BaseBuildStep {
 
       throw Exception('Missing required properties: $propsKeys');
     } else {
-      return super.handle(data);
+      return data;
     }
   }
 

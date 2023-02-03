@@ -1,14 +1,12 @@
 projectDirectory: /Users/nogipx/Documents/Projects/nogipx/test_env
 artifactsOutputsDirectory: /Users/nogipx/Documents/Projects/nogipx/packo/apk_builds
 requiredEnv:
-  - API_URI
-  - SUFFIX
+  - BUNDLE_ID_SUFFIX
   - APP_NAME
   - ENVIRONMENT
-envFile: env_bad.env
+envFile: test.env
 initialEnv:
-  API_URI: 'https://vk.com'
-  SUFFIX: 'test'
-  APP_NAME: .${ENVIRONMENT}.${SUFFIX}
-  ENVIRONMENT: 'test'
+  BUNDLE_ID_SUFFIX: "(ENVIRONMENT != null ? '.' + ENVIRONMENT : '')"
+#  APP_NAME: "TestEnv"
+  APP_NAME: "'TestEnv' + (BUILD_TYPE != 'release' ? '.' + BUILD_TYPE : '')"
 

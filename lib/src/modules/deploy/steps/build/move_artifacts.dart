@@ -1,46 +1,29 @@
 import 'dart:io';
 
 import 'package:packo/packo.dart';
+import 'package:process_run/cmd_run.dart';
 
-class StepRunActualBuild extends BaseBuildStep {
-  final String? customOutputPath;
-
-  StepRunActualBuild({
-    this.customOutputPath,
-  });
+class StepMoveArtifacts
+    with VerboseStep
+    implements BuildStep<BuildTransaction> {
+  StepMoveArtifacts();
 
   @override
   FutureOr<BuildTransaction> handle(BuildTransaction data) async {
-    final dartDefineString = data.env.map((e) => e.dartDefine).join(' ');
-    final cmdBuffer = StringBuffer()
-      ..write('build ${data.settings.platform.name} ')
-      ..write('--${data.settings.type.name} $dartDefineString');
-
-    final cmd = cmdBuffer.toString().trim();
-
-    final shell = FlutterShell(
-      workingDirectory: data.settings.directory,
-    )..open();
-    shell.eventStream.listen(print);
-
-    await shell.run(cmd);
-
-    if (customOutputPath != null) {
+    if (data.settings.outputDirPath != null) {
       await _copyBuildToCustomOutput(
-        customOutputPath,
+        data.settings.directory.path,
+        data.settings.outputDirPath,
         data.settings.type,
-        shell,
       );
     }
-
-    shell.close();
-    return super.handle(data);
+    return data;
   }
 
   Future<void> _copyBuildToCustomOutput(
+    String projectDir,
     String? outputDirPath,
     BuildType type,
-    FlutterShell shell,
   ) async {
     if (outputDirPath != null) {
       late final String outputEndpoint;
@@ -62,10 +45,12 @@ class StepRunActualBuild extends BaseBuildStep {
       }
 
       print('\nOutput directory: ${outputDir.absolute.path}\n');
-      await shell.runWithoutFlutter(
+      final cmd = ProcessCmd(
         'cp',
-        '-a build/app/outputs/apk/$outputEndpoint ${outputDir.path}',
+        '-a $projectDir/build/app/outputs/apk/$outputEndpoint ${outputDir.path}'
+            .split(' '),
       );
+      await runCmd(cmd);
     }
   }
 }

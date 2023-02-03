@@ -4,7 +4,9 @@ typedef EnvPropertiesTransformer = Map<String, EnvProperty> Function(
   Map<String, EnvProperty>,
 );
 
-class StepTransformEnvProperties extends BaseBuildStep {
+class StepTransformEnvProperties
+    with VerboseStep
+    implements BuildStep<BuildTransaction> {
   /// Allows to transform env properties.
   ///
   /// Has higher priority over [overrides] (applies after).
@@ -29,9 +31,14 @@ class StepTransformEnvProperties extends BaseBuildStep {
     final transformedEnv =
         transformer == null ? overriddenEnv : transformer!(overriddenEnv);
 
-    data.env.clear();
-    data.env.addAll(transformedEnv.values);
+    final resultEnv = DeployUtils.interpolateEnvValues(
+      transformedEnv,
+      data.settings.initialEnv,
+    );
 
-    return super.handle(data);
+    data.env.clear();
+    data.env.addAll(resultEnv.values);
+
+    return data;
   }
 }

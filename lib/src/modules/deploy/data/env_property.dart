@@ -41,4 +41,10 @@ class EnvProperty {
       required: required ?? this.required,
     );
   }
+
+  @override
+  String toString() => 'EnvProperty('
+      '$key, '
+      'value: $value'
+      ')';
 }

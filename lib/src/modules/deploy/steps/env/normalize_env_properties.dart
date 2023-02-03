@@ -1,6 +1,8 @@
 import 'package:packo/packo.dart';
 
-class StepNormalizeEnvProperties extends BaseBuildStep {
+class StepNormalizeEnvProperties
+    with VerboseStep
+    implements BuildStep<BuildTransaction> {
   final Set<EnvProperty> neededProperties;
 
   StepNormalizeEnvProperties({
@@ -12,7 +14,7 @@ class StepNormalizeEnvProperties extends BaseBuildStep {
     final fastMap = _fillWithDefaults(DeployUtils.fastMapProperties(data.env));
     data.env.clear();
     data.env.addAll(fastMap.values);
-    return super.handle(data);
+    return data;
   }
 
   Map<String, EnvProperty> _fillWithDefaults(
