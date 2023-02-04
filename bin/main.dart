@@ -28,9 +28,11 @@ Future<void> main(List<String> arguments) async {
     ..addCommand(StartBuildRunnerCommand(entrypoint))
     ..addCommand(BuildAppCommand());
 
-  await runner.run(arguments).catchError((Object error) {
-    if (error is! UsageException) throw error;
-    print(error);
+  try {
+    await runner.run(arguments).catchError((error) {});
+  } on Exception catch (e) {
+    if (e is! UsageException) rethrow;
+    print(e);
     exit(64); // Exit code 64 indicates a usage error.
-  });
+  }
 }

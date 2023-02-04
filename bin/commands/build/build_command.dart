@@ -38,6 +38,10 @@ class BuildAppCommand extends Command {
         abbr: 't',
         defaultsTo: BuildType.release.name,
         allowed: BuildType.values.map((e) => e.name),
+      )
+      ..addOption(
+        'envFile',
+        abbr: 'e',
       );
   }
 
@@ -74,7 +78,8 @@ class BuildAppCommand extends Command {
         outputDirPath: yaml[YamlKey.artifactsOutputsDirectory] as String?,
         neededEnvKeys: neededEnv?.value.toSet().cast() ?? {},
         initialEnv: initialEnv,
-        envFilePath: yaml[YamlKey.envFile] as String?,
+        envFilePath: args[YamlKey.envFile] as String? ??
+            yaml[YamlKey.envFile] as String?,
       );
 
       await buildApp(settings: settings);

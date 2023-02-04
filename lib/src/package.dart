@@ -123,7 +123,7 @@ class Package {
     } on ShellException catch (_) {
       print('Exception while running build: $_');
     } finally {
-      shell.close();
+      await shell.close();
       print('End running build_runner.\n');
     }
   }
