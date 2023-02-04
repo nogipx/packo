@@ -1,11 +1,14 @@
 import 'package:collection/collection.dart';
 import 'package:expressions/expressions.dart';
 import 'package:intl/intl.dart';
+import 'package:packo/packo.dart';
 
 class YamlEvaluator extends ExpressionEvaluator {
+  final BuildSettings? settings;
   final Map<String, String?> env;
 
   const YamlEvaluator({
+    this.settings,
     this.env = const {},
     super.memberAccessors = const [],
   });
@@ -36,6 +39,21 @@ class YamlEvaluator extends ExpressionEvaluator {
         final date = format.format(DateTime.now());
         return _prefixed(cmd, date);
       }
+      return;
+    }
+
+    if (cmd.first == 'build') {
+      _guardBuildSettings();
+
+      if (cmd[1] == 'isRelease') {
+        return settings!.type == BuildType.release;
+      } else if (cmd[1] == 'isProfile') {
+        return settings!.type == BuildType.profile;
+      } else if (cmd[1] == 'isDebug') {
+        return settings!.type == BuildType.debug;
+      } else if (cmd[1] == 'isNotRelease') {
+        return settings!.type != BuildType.release;
+      }
     }
 
     return super.evalMemberExpression(expression, context);
@@ -64,6 +82,12 @@ class YamlEvaluator extends ExpressionEvaluator {
   void _guardInterpolation(String command) {
     if (command.split('.').isEmpty) {
       throw Exception('Invalid interpolation: $command');
+    }
+  }
+
+  void _guardBuildSettings() {
+    if (settings == null) {
+      throw Exception('Build settings are not available.');
     }
   }
 }

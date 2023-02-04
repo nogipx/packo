@@ -3,11 +3,12 @@ artifactsOutputsDirectory: /Users/nogipx/Documents/Projects/nogipx/packo/apk_bui
 requiredEnv:
   - BUNDLE_ID_SUFFIX
   - APP_NAME
-#  - ENVIRONMENT
+  - ENVIRONMENT
   - OUTPUT_APK
 envFile: test.env
 initialEnv:
-  BUNDLE_ID_SUFFIX: "env.BUILD_TYPE != 'release' ? env.dot.ENVIRONMENT + env.dot.BUILD_TYPE : ''"
-  APP_NAME: "'TestEnv' + (env.BUILD_TYPE != 'release' ? env.dot.BUILD_TYPE : '')"
+#  ENVIRONMENT: qa
+  BUNDLE_ID_SUFFIX: "build.isNotRelease ? env.dot.ENVIRONMENT + env.dot.BUILD_TYPE : ''"
+  APP_NAME: "'TestEnv' + (build.isNotRelease ? env.dot.BUILD_TYPE : '')"
   OUTPUT_APK: "env.APP_NAME + env.dot.ENVIRONMENT + datetime.dash.nowFull"
 

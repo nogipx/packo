@@ -1,3 +1,4 @@
+import 'package:expressions/expressions.dart';
 import 'package:packo/packo.dart';
 
 class StepNormalizeEnvProperties
@@ -12,14 +13,20 @@ class StepNormalizeEnvProperties
   @override
   FutureOr<BuildTransaction> handle(BuildTransaction data) async {
     final fastMap = _fillWithDefaults(DeployUtils.fastMapProperties(data.env));
+    final result = _interpolateEnvValues(
+      data: fastMap,
+      buildSettings: data.settings,
+      excludeKeys: {
+        'APP_VERSION',
+      },
+    );
+
     data.env.clear();
-    data.env.addAll(fastMap.values);
+    data.env.addAll(result.values);
     return data;
   }
 
-  Map<String, EnvProperty> _fillWithDefaults(
-    Map<String, EnvProperty> data,
-  ) {
+  FastMapEnvProperty _fillWithDefaults(FastMapEnvProperty data) {
     final neededFastMap = DeployUtils.fastMapProperties(neededProperties);
     final actualFastMap = data;
 
@@ -54,5 +61,48 @@ class StepNormalizeEnvProperties
     };
 
     return resultProps;
+  }
+
+  FastMapEnvProperty _interpolateEnvValues({
+    FastMapEnvProperty data = const {},
+    BuildSettings? buildSettings,
+    Iterable<String> excludeKeys = const {},
+  }) {
+    final context = data
+        .map((key, value) => MapEntry(key, value.value ?? value.defaultValue));
+
+    final interpolated = data.map((key, value) {
+      final originalEntry = MapEntry(key, value);
+      if (value.value == null || excludeKeys.contains(key)) {
+        return originalEntry;
+      }
+
+      Expression expression;
+      try {
+        expression = Expression.parse(value.value!);
+      } on Exception catch (e, stackTrace) {
+        print('Exception while interpolate property: $key');
+        print(e);
+        print(stackTrace);
+        return originalEntry;
+      }
+
+      final evaluatedValue =
+          YamlEvaluator(env: context, settings: buildSettings)
+              .eval(expression, context)
+              .toString();
+
+      final newValue = evaluatedValue != 'null' ? evaluatedValue : value.value;
+
+      final newProperty = value.copyWith(value: newValue);
+      print('Expanded value: $newProperty');
+
+      context[key] = newValue;
+
+      final newEntry = MapEntry(key, newProperty);
+      return newEntry;
+    });
+
+    return interpolated;
   }
 }

@@ -21,9 +21,9 @@ Future<void> buildApp({
     },
   );
 
-  final transformEnvStep = StepTransformEnvProperties(
-    transformer: transformProperties,
-  );
+  // final transformEnvStep = StepTransformEnvProperties(
+  //   transformer: transformProperties,
+  // );
 
   final normalizeEnvStep = StepNormalizeEnvProperties(
     neededProperties: neededProperties,
@@ -37,7 +37,7 @@ Future<void> buildApp({
     ..setNext(collectEnvStep)
     ..setNext(StepInjectSystemProperties())
     ..setNext(normalizeEnvStep)
-    ..setNext(transformEnvStep)
+    // ..setNext(transformEnvStep)
     ..setNext(guardEnvStep)
     ..setNext(StepRunActualBuild())
     ..setNext(StepMoveArtifacts());

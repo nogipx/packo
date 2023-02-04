@@ -31,13 +31,8 @@ class StepTransformEnvProperties
     final transformedEnv =
         transformer == null ? overriddenEnv : transformer!(overriddenEnv);
 
-    final resultEnv = DeployUtils.interpolateEnvValues(
-      transformedEnv,
-      data.settings.initialEnv,
-    );
-
     data.env.clear();
-    data.env.addAll(resultEnv.values);
+    data.env.addAll(transformedEnv.values);
 
     return data;
   }
