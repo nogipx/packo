@@ -1,5 +1,6 @@
 import 'package:cli_util/cli_logging.dart';
 import 'package:packo/packo.dart';
+import 'package:packo/src/modules/deploy/steps/build/guard_build_settings.dart';
 
 Future<void> buildApp({
   required BuildSettings settings,
@@ -30,6 +31,7 @@ Future<void> buildApp({
   );
 
   final buildCompositor = BuildCompositor()
+    ..setNext(StepGuardBuildSettings())
     ..setNext(collectEnvStep)
     ..setNext(StepInjectSystemProperties())
     ..setNext(normalizeEnvStep)

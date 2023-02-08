@@ -10,13 +10,16 @@ class ConsolePrinterStepListener implements StepListener {
   Progress? _lastProgress;
 
   @override
-  void onStepChanged(BuildStep step, StepStatus status) {
+  void onStepChanged(BuildStep step, StepStatus status, [Object? error]) {
     var message = '';
     final stepName = step.runtimeType.toString();
 
     if (status == StepStatus.error) {
       message = 'Step "$stepName" completed with error';
       logger.stderr(message);
+      if (error != null) {
+        logger.stderr(error.toString());
+      }
       return;
     }
 

@@ -4,6 +4,8 @@ import 'package:args/command_runner.dart';
 import 'package:packo/packo.dart';
 import 'package:yaml/yaml.dart';
 
+import 'yaml_config_parser.dart';
+
 abstract class YamlKey {
   static const buildPlatform = 'buildPlatform';
   static const buildType = 'buildType';
@@ -54,36 +56,30 @@ class BuildAppCommand extends Command {
     final args = argResults!;
 
     if (args.wasParsed('configFilePath')) {
-      final path = args['configFilePath']?.toString() ?? '';
-      final yaml = _loadYaml(path);
-
-      final platform =
-          BuildPlatform.parse(args[YamlKey.buildPlatform] as String?);
-      final type = BuildType.parse(args[YamlKey.buildType] as String?);
-      if (platform == null) {
-        throw ArgumentError.notNull(YamlKey.buildPlatform);
-      }
-      if (type == null) {
-        throw ArgumentError.notNull(YamlKey.buildType);
-      }
-
-      final neededEnv = yaml[YamlKey.requiredEnv] as YamlList?;
-      final parsedInitialEnv = yaml[YamlKey.initialEnv] as YamlMap?;
-      final initialEnv = parsedInitialEnv?.value.cast<String, String>() ?? {};
-
-      final settings = BuildSettings(
-        directory: Directory(yaml[YamlKey.projectDirectory] as String),
-        platform: platform,
-        type: type,
-        outputDirPath: yaml[YamlKey.artifactsOutputsDirectory] as String?,
-        neededEnvKeys: neededEnv?.value.toSet().cast() ?? {},
-        initialEnv: initialEnv,
-        envFilePath: args[YamlKey.envFile] as String? ??
-            yaml[YamlKey.envFile] as String?,
+      final platform = BuildPlatform.parse(
+        args[YamlKey.buildPlatform] as String?,
+      );
+      final type = BuildType.parse(
+        args[YamlKey.buildType] as String?,
       );
 
-      await buildApp(settings: settings);
+      final settings = await _parseConfigSettings(
+        args['configFilePath'] as String?,
+      );
+
+      await buildApp(
+        settings: settings.copyWith(
+          platform: platform != BuildPlatform.undefined ? platform : null,
+          type: type != BuildType.undefined ? type : null,
+        ),
+      );
     }
+  }
+
+  Future<BuildSettings> _parseConfigSettings(String? path) async {
+    final parser = YamlToBuildSettingsParser();
+    final settings = parser.parseSettings(_loadYaml(path));
+    return settings;
   }
 
   YamlMap _loadYaml(String? path) {

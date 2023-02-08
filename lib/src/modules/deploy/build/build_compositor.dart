@@ -33,12 +33,11 @@ class BuildCompositor {
       listener?.onStepChanged(step, StepStatus.inProgress);
 
       try {
-        // await Future.delayed(const Duration(seconds: 2));
         final updatedTransaction = await step.handle(transaction);
         listener?.onStepChanged(step, StepStatus.completed);
         transaction = updatedTransaction;
-      } on Exception catch (_) {
-        listener?.onStepChanged(step, StepStatus.error);
+      } on Exception catch (error) {
+        listener?.onStepChanged(step, StepStatus.error, error);
         rethrow;
       }
     }

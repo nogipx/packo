@@ -15,5 +15,5 @@ mixin VerboseStep {
 enum StepStatus { inProgress, completed, error }
 
 abstract class StepListener {
-  void onStepChanged(BuildStep step, StepStatus status);
+  void onStepChanged(BuildStep step, StepStatus status, [Object? error]);
 }

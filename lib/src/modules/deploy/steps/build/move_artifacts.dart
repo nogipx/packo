@@ -37,6 +37,8 @@ class StepMoveArtifacts
         case BuildType.release:
           outputEndpoint = '/release';
           break;
+        case BuildType.undefined:
+          throw ArgumentError.value(type);
       }
 
       final outputDir = Directory(outputDirPath);
