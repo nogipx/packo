@@ -41,10 +41,7 @@ class BuildAppCommand extends Command {
         defaultsTo: BuildType.release.name,
         allowed: BuildType.values.map((e) => e.name),
       )
-      ..addOption(
-        'envFile',
-        abbr: 'e',
-      );
+      ..addOption('envFile');
   }
 
   @override
@@ -67,10 +64,13 @@ class BuildAppCommand extends Command {
         args['configFilePath'] as String?,
       );
 
+      final argsEnvFile = args[YamlKey.envFile] as String?;
+
       await buildApp(
         settings: settings.copyWith(
           platform: platform != BuildPlatform.undefined ? platform : null,
           type: type != BuildType.undefined ? type : null,
+          envFilePath: argsEnvFile,
         ),
       );
     }

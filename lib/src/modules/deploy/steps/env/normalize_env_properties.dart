@@ -77,30 +77,29 @@ class StepNormalizeEnvProperties
         return originalEntry;
       }
 
-      Expression expression;
       try {
-        expression = Expression.parse(value.value!);
+        final expression = Expression.parse(value.value!);
+        final evaluatedValue =
+            YamlEvaluator(env: context, settings: buildSettings)
+                .eval(expression, context)
+                ?.toString();
+
+        final newValue =
+            evaluatedValue != 'null' ? evaluatedValue : value.value;
+
+        final newProperty = value.copyWith(value: newValue);
+        print('Expanded value: $newProperty');
+
+        context[key] = newValue;
+
+        final newEntry = MapEntry(key, newProperty);
+        return newEntry;
       } on Exception catch (e, stackTrace) {
         print('Exception while interpolate property: $key');
         print(e);
         print(stackTrace);
-        return originalEntry;
+        rethrow;
       }
-
-      final evaluatedValue =
-          YamlEvaluator(env: context, settings: buildSettings)
-              .eval(expression, context)
-              .toString();
-
-      final newValue = evaluatedValue != 'null' ? evaluatedValue : value.value;
-
-      final newProperty = value.copyWith(value: newValue);
-      print('Expanded value: $newProperty');
-
-      context[key] = newValue;
-
-      final newEntry = MapEntry(key, newProperty);
-      return newEntry;
     });
 
     return interpolated;

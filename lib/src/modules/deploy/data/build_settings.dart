@@ -25,44 +25,16 @@ class BuildSettings {
     Directory? directory,
     BuildPlatform? platform,
     BuildType? type,
+    String? envFilePath,
   }) {
     return BuildSettings(
       directory: directory ?? this.directory,
       platform: platform ?? this.platform,
       type: type ?? this.type,
-      envFilePath: envFilePath,
+      envFilePath: envFilePath ?? this.envFilePath,
       outputDirPath: outputDirPath,
       neededEnvKeys: neededEnvKeys,
       initialEnv: initialEnv,
     );
   }
-
-  Iterable<Exception> guard() {
-    final guards = [
-      _guard(
-        test: () =>
-            directory.path.isNotEmpty &&
-            directory.existsSync() &&
-            Package.of(directory) != null,
-        errorMessage:
-            'Project directory must be a valid path of flutter project.',
-      ),
-      _guard(
-        test: () => platform != BuildPlatform.undefined,
-        errorMessage: 'Build platform must be specified.',
-      ),
-      _guard(
-        test: () => type != BuildType.undefined,
-        errorMessage: 'Build type must be specified.',
-      ),
-    ];
-
-    return guards.whereType<Exception>();
-  }
-
-  Exception? _guard({
-    required bool Function() test,
-    required String errorMessage,
-  }) =>
-      test() ? null : Exception(errorMessage);
 }

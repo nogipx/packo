@@ -4,7 +4,6 @@ import 'package:packo/src/modules/deploy/steps/build/guard_build_settings.dart';
 
 Future<void> buildApp({
   required BuildSettings settings,
-  EnvPropertiesTransformer? transformProperties,
 }) async {
   final neededProperties = settings.neededEnvKeys.map((e) {
     return EnvProperty(

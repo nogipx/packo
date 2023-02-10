@@ -14,6 +14,22 @@ class YamlEvaluator extends ExpressionEvaluator {
   });
 
   @override
+  dynamic evalCallExpression(
+    CallExpression expression,
+    Map<String, dynamic> context,
+  ) {
+    try {
+      final t = super.evalCallExpression(expression, context);
+      return t;
+    }
+
+    // ignore: avoid_catches_without_on_clauses
+    catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  @override
   dynamic evalMemberExpression(
     MemberExpression expression,
     Map<String, dynamic> context,

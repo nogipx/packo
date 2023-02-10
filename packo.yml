@@ -11,3 +11,4 @@ packo_build:
     BUNDLE_ID_SUFFIX: "build.isNotRelease ? env.dot.ENVIRONMENT + env.dot.BUILD_TYPE : ''"
     APP_NAME: "'TestEnv' + (build.isNotRelease ? env.dot.BUILD_TYPE : '')"
     OUTPUT_APK: "env.APP_NAME + env.dot.ENVIRONMENT + datetime.dash.nowFull"
+#    OUTPUT_APK: "env.APP_NAME + env.dot.ENVIRONMENT + datetime.dash.now.format(dd-MM)"
