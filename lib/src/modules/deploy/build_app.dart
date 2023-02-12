@@ -41,9 +41,7 @@ Future<void> buildApp({
   await buildCompositor.run(
     settings: settings,
     listener: ConsolePrinterStepListener(
-      Logger.verbose(
-        ansi: Ansi(true),
-      ),
+      Logger.verbose(ansi: Ansi(true)),
     ),
   );
 }

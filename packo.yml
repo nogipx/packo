@@ -12,3 +12,10 @@ packo_build:
     APP_NAME: "'TestEnv' + (build.isNotRelease ? env.dot.BUILD_TYPE : '')"
     OUTPUT_APK: "env.APP_NAME + env.dot.ENVIRONMENT + datetime.dash.nowFull"
 #    OUTPUT_APK: "env.APP_NAME + env.dot.ENVIRONMENT + datetime.dash.now.format(dd-MM)"
+
+packo_init:
+
+
+# автогенерация конфигов для разных environment
+# подумать над проработкой под bitrise/codemagic/etc.
+# автоинкремент номера билда при релизе
