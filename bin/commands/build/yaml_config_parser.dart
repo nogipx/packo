@@ -17,6 +17,7 @@ abstract class YamlKey {
   static const projectDirectory = 'projectDirectory';
   static const artifactsOutputsDirectory = 'artifactsOutputsDirectory';
   static const envFile = 'envFile';
+  static const executable = 'flutterExecutable';
 }
 
 class YamlToBuildSettingsParser implements YamlSettingsParser {
@@ -34,6 +35,7 @@ class YamlToBuildSettingsParser implements YamlSettingsParser {
     final parsedInitialEnv = data[YamlKey.initialEnv] as YamlMap?;
     final initialEnv = parsedInitialEnv?.value.cast<String, String>() ?? {};
     final envFilePath = data[YamlKey.envFile] as String?;
+    final executable = data[YamlKey.executable] as String?;
 
     final settings = BuildSettings(
       directory: directory,
@@ -41,6 +43,7 @@ class YamlToBuildSettingsParser implements YamlSettingsParser {
       neededEnvKeys: neededEnv?.value.toSet().cast() ?? {},
       initialEnv: initialEnv,
       envFilePath: envFilePath,
+      flutterExecutable: executable,
     );
 
     return settings;

@@ -1,5 +1,7 @@
 import 'dart:async';
 
+typedef StringEvaluator = String Function(String src);
+
 abstract class BuildStep<T> {
   FutureOr<T> handle(T data);
 }

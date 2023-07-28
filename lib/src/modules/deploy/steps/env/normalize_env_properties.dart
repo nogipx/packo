@@ -5,9 +5,11 @@ class StepNormalizeEnvProperties
     with VerboseStep
     implements BuildStep<BuildTransaction> {
   final Set<EnvProperty> neededProperties;
+  final StringEvaluator? stringEvaluator;
 
   StepNormalizeEnvProperties({
     this.neededProperties = const {},
+    this.stringEvaluator,
   });
 
   @override
@@ -98,7 +100,7 @@ class StepNormalizeEnvProperties
         print('Exception while interpolate property: $key');
         print(e);
         print(stackTrace);
-        rethrow;
+        return originalEntry;
       }
     });
 

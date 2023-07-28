@@ -16,6 +16,7 @@ class StepRunActualBuild
 
     final shell = FlutterShell(
       workingDirectory: data.settings.directory,
+      executable: data.settings.flutterExecutable,
     )..open();
     shell.eventStream.listen(print);
 

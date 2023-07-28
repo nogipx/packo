@@ -6,16 +6,6 @@ import 'package:yaml/yaml.dart';
 
 import 'yaml_config_parser.dart';
 
-abstract class YamlKey {
-  static const buildPlatform = 'buildPlatform';
-  static const buildType = 'buildType';
-  static const requiredEnv = 'requiredEnv';
-  static const initialEnv = 'initialEnv';
-  static const projectDirectory = 'projectDirectory';
-  static const artifactsOutputsDirectory = 'artifactsOutputsDirectory';
-  static const envFile = 'envFile';
-}
-
 class BuildAppCommand extends Command {
   @override
   final String name = 'build';

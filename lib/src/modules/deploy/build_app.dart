@@ -33,7 +33,7 @@ Future<void> buildApp({
     ..setNext(StepGuardBuildSettings())
     ..setNext(collectEnvStep)
     ..setNext(StepInjectSystemProperties())
-    ..setNext(normalizeEnvStep)
+    // ..setNext(normalizeEnvStep)
     ..setNext(guardEnvStep)
     ..setNext(StepRunActualBuild())
     ..setNext(StepMoveArtifacts());

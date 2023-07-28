@@ -13,6 +13,7 @@ class FlutterCommand extends FlutterCmd {
 
 class FlutterShell {
   final Directory workingDirectory;
+  final String? executable;
 
   String? _flutterPath;
   ShellLinesController? _lines;
@@ -20,6 +21,7 @@ class FlutterShell {
 
   FlutterShell({
     required this.workingDirectory,
+    this.executable,
   });
 
   Stream<String> get eventStream {
@@ -30,7 +32,7 @@ class FlutterShell {
   }
 
   void open() {
-    _flutterPath = whichSync('flutter');
+    _flutterPath = executable ?? whichSync('flutter');
     if (_flutterPath == null) {
       throw Exception('Flutter executable not found.');
     }

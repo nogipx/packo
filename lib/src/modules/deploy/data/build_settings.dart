@@ -7,6 +7,7 @@ class BuildSettings {
   final BuildPlatform platform;
   final BuildType type;
   final String? envFilePath;
+  final String? flutterExecutable;
   final String? outputDirPath;
   final Set<String> neededEnvKeys;
   final Map<String, String> initialEnv;
@@ -19,6 +20,7 @@ class BuildSettings {
     this.outputDirPath,
     this.neededEnvKeys = const {},
     this.initialEnv = const {},
+    this.flutterExecutable,
   });
 
   BuildSettings copyWith({
@@ -35,6 +37,7 @@ class BuildSettings {
       outputDirPath: outputDirPath,
       neededEnvKeys: neededEnvKeys,
       initialEnv: initialEnv,
+      flutterExecutable: flutterExecutable,
     );
   }
 }

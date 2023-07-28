@@ -1,5 +1,5 @@
 name: packo
-description: Sync related packages versions.
+description: Simplifying Flutter app build configurations. Tools for managing local packages.
 version: 0.2.0
 repository: https://github.com/nogipx/packo
 
