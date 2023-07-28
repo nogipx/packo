@@ -40,21 +40,20 @@ class IncrementVersionsCommand extends Command {
 
   @override
   Future<void> run() async {
-    const usageMessage = 'Specify particual package name as argument, '
+    final collection = entrypoint.getPackages();
+    final availablePackages = collection.packages.map((e) => e.name).toList();
+    final usageMessage = 'Specify particual package name as argument, '
         'or leave it empty to apply increment '
-        'to package in current directory.';
+        'to package in current directory. \n\n'
+        'Available packages: $availablePackages';
 
     final args = argResults!;
-    final collection = entrypoint.getPackages();
     final argPackageName = args.arguments.elementAtOrNull(1);
     final targetPackageName = argPackageName ?? entrypoint.currentPackage?.name;
 
-    final availablePackages = collection.packages.map((e) => e.name).toList();
-
     if (targetPackageName == null) {
       throw UsageException(
-        'Not specified target package. \n'
-        'Available packages: $availablePackages',
+        'Not specified target package.',
         usageMessage,
       );
     }
@@ -63,8 +62,7 @@ class IncrementVersionsCommand extends Command {
 
     if (targetPackage == null) {
       throw UsageException(
-        'Package "$targetPackageName" not found. \n'
-        'Available packages: $availablePackages',
+        'Package "$targetPackageName" not found.',
         usageMessage,
       );
     }
