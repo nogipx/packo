@@ -5,7 +5,7 @@ class StepCollectEnvProperties
     implements BuildStep<BuildTransaction> {
   final Iterable<EnvPropertySource> sources;
 
-  StepCollectEnvProperties({
+  const StepCollectEnvProperties({
     this.sources = const {},
   });
 

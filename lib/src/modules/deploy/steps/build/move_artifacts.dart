@@ -6,7 +6,7 @@ import 'package:process_run/cmd_run.dart';
 class StepMoveArtifacts
     with VerboseStep
     implements BuildStep<BuildTransaction> {
-  StepMoveArtifacts();
+  const StepMoveArtifacts();
 
   @override
   FutureOr<BuildTransaction> handle(BuildTransaction data) async {

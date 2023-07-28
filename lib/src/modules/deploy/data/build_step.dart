@@ -1,8 +1,12 @@
 import 'dart:async';
 
+import 'package:packo/packo.dart';
+
 typedef StringEvaluator = String Function(String src);
 
 abstract class BuildStep<T> {
+  const BuildStep();
+
   FutureOr<T> handle(T data);
 }
 

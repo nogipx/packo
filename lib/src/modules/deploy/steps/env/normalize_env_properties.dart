@@ -7,7 +7,7 @@ class StepNormalizeEnvProperties
   final Set<EnvProperty> neededProperties;
   final StringEvaluator? stringEvaluator;
 
-  StepNormalizeEnvProperties({
+  const StepNormalizeEnvProperties({
     this.neededProperties = const {},
     this.stringEvaluator,
   });

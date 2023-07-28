@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:packo/packo.dart';
+import 'package:process_run/shell.dart';
 
 class StepRunActualBuild
     with VerboseStep
     implements BuildStep<BuildTransaction> {
-  StepRunActualBuild();
+  const StepRunActualBuild();
 
   @override
   FutureOr<BuildTransaction> handle(BuildTransaction data) async {
@@ -12,16 +15,19 @@ class StepRunActualBuild
       ..write('build ${data.settings.platform.name} ')
       ..write('--${data.settings.type.name} $dartDefineString');
 
-    final cmd = cmdBuffer.toString().trim();
+    final args = cmdBuffer.toString().trim();
 
-    final shell = FlutterShell(
-      workingDirectory: data.settings.directory,
-      executable: data.settings.flutterExecutable,
-    )..open();
-    shell.eventStream.listen(print);
+    final controller = ShellLinesController();
+
+    final shell = Shell(
+      workingDirectory: data.settings.directory.path,
+      stdout: controller.sink,
+    );
+
+    final cmd = '${data.settings.flutterExecutable} $args';
 
     await shell.run(cmd);
-    await shell.close();
+    shell.kill(ProcessSignal.sigquit);
     return data;
   }
 }

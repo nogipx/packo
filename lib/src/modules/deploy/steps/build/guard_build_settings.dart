@@ -1,6 +1,8 @@
 import 'package:packo/packo.dart';
 
 class StepGuardBuildSettings implements BuildStep<BuildTransaction> {
+  const StepGuardBuildSettings();
+
   @override
   FutureOr<BuildTransaction> handle(BuildTransaction data) {
     final guards = _guard(data.settings);

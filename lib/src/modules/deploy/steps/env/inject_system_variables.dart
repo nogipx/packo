@@ -1,6 +1,8 @@
 import 'package:packo/packo.dart';
 
-class StepInjectSystemProperties extends BuildStep<BuildTransaction> {
+class StepInjectSystemProperties implements BuildStep<BuildTransaction> {
+  const StepInjectSystemProperties();
+
   @override
   FutureOr<BuildTransaction> handle(BuildTransaction data) {
     final package = Package.of(data.settings.directory);

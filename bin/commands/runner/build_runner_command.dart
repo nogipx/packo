@@ -1,5 +1,4 @@
 import 'package:args/command_runner.dart';
-import 'package:collection/collection.dart';
 import 'package:packo/packo.dart';
 
 class StartBuildRunnerCommand extends Command {
@@ -16,11 +15,10 @@ class StartBuildRunnerCommand extends Command {
         'build',
         abbr: 'b',
         help: 'Run build runner for package',
-        valueHelp: 'your_package',
       )
       ..addFlag(
-        'buildAll',
-        abbr: 'B',
+        'buildRecursive',
+        abbr: 'r',
         help: 'Run build runner for all packages',
       );
   }
@@ -28,22 +26,24 @@ class StartBuildRunnerCommand extends Command {
   @override
   Future<void> run() async {
     final args = argResults!;
+    final collection = entrypoint.getPackages();
 
     if (args.wasParsed('build')) {
       final name = args.arguments[1];
-      final package =
-          entrypoint.getPackages().firstWhereOrNull((e) => e.name == name);
+      final package = collection.find(name: name);
       if (package != null) {
-        await package.startBuildRunner();
+        await entrypoint.startBuildRunner(package);
       }
     }
-    if (args.wasParsed('buildAll')) {
-      final packages = entrypoint.getPackages();
-      for (final package in packages) {
-        await package.startBuildRunner();
+    if (args.wasParsed('buildRecursive')) {
+      for (final package in collection.packages) {
+        await entrypoint.startBuildRunner(package);
       }
+
       final current = entrypoint.currentPackage;
-      await current?.startBuildRunner();
+      if (current != null) {
+        await entrypoint.startBuildRunner(current);
+      }
     }
   }
 }

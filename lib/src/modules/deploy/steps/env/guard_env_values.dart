@@ -9,7 +9,7 @@ class StepGuardEnvProperties
   String get description =>
       'Filling properties with default values and adding missing properties.';
 
-  StepGuardEnvProperties({
+  const StepGuardEnvProperties({
     this.requiredProperties = const {},
   });
 
