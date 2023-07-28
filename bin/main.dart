@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_types_on_closure_parameters
+
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
@@ -13,11 +15,12 @@ Future<void> main(List<String> arguments) async {
     ..addCommand(StartBuildRunnerCommand(entrypoint))
     ..addCommand(BuildAppCommand());
 
-  try {
-    await runner.run(arguments).catchError((error) {});
-  } on Exception catch (e) {
-    if (e is! UsageException) rethrow;
-    print(e);
-    exit(64); // Exit code 64 indicates a usage error.
-  }
+  await runner.run(arguments).catchError((Object error) {
+    if (error is! UsageException) {
+      // ignore: only_throw_errors
+      throw error;
+    }
+    print(error);
+    exit(64);
+  });
 }

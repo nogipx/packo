@@ -14,7 +14,14 @@ class Entrypoint {
     final featurePackagesPath = _workdir
         .listSync(recursive: recursive)
         .whereType<Directory>()
-        .where((e) => !_lastPathSegment(e.uri).startsWith('.'));
+        .where((e) {
+      final isDartTool = e.path.contains('.dart_tool');
+      final isSdk =
+          e.path.contains('flutter_sdk') || e.path.contains('ios/.symlinks');
+      final isHiddenDirectory = _lastPathSegment(e.uri).startsWith('.');
+
+      return !isSdk && !isDartTool && !isHiddenDirectory;
+    });
 
     return featurePackagesPath;
   }
@@ -45,7 +52,11 @@ class Entrypoint {
     bool recursive = true,
   }) {
     final packagesDirs = getSubDirectories(recursive: recursive);
-    final packages = packagesDirs.map(Package.of).whereType<Package>().toList();
+    final targetDirs = [
+      ...packagesDirs,
+      workdir,
+    ];
+    final packages = targetDirs.map(Package.of).whereType<Package>().toList();
     final collection = PackagesCollection(
       packages: packages,
     );

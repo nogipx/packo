@@ -16,21 +16,25 @@ class IncrementVersionsCommand extends Command {
         'major',
         help: 'Increments package major version.',
         negatable: false,
+        aliases: ['major'],
       )
       ..addFlag(
         'minor',
         help: 'Increments package minor version.',
         negatable: false,
+        aliases: ['minor'],
       )
       ..addFlag(
         'patch',
         help: 'Increments package patch version.',
         negatable: false,
+        aliases: ['patch'],
       )
       ..addFlag(
         'build',
         help: 'Increments package build number.',
         negatable: false,
+        aliases: ['build'],
       );
   }
 
@@ -45,9 +49,12 @@ class IncrementVersionsCommand extends Command {
     final argPackageName = args.arguments.elementAtOrNull(1);
     final targetPackageName = argPackageName ?? entrypoint.currentPackage?.name;
 
+    final availablePackages = collection.packages.map((e) => e.name).toList();
+
     if (targetPackageName == null) {
       throw UsageException(
-        'Not specified target package.',
+        'Not specified target package. \n'
+        'Available packages: $availablePackages',
         usageMessage,
       );
     }
@@ -56,7 +63,8 @@ class IncrementVersionsCommand extends Command {
 
     if (targetPackage == null) {
       throw UsageException(
-        'Package "$targetPackageName" not found.',
+        'Package "$targetPackageName" not found. \n'
+        'Available packages: $availablePackages',
         usageMessage,
       );
     }
@@ -69,8 +77,11 @@ class IncrementVersionsCommand extends Command {
       entrypoint.incrementPatch(targetPackage);
     } else if (args.wasParsed('build')) {
       entrypoint.incrementBuildNumber(targetPackage);
+    } else {
+      printUsage();
+      return;
     }
 
-    printUsage();
+    print('${targetPackage.name} version changed.');
   }
 }
