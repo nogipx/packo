@@ -1,3 +1,6 @@
+# [0.3.4]
+* Fix executable
+
 # [0.3.3]
 * Remove intl dependency
 
