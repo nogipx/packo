@@ -1,6 +1,8 @@
 import 'package:args/command_runner.dart';
 import 'package:packo/packo.dart';
 
+import '_helper.dart';
+
 class StartBuildRunnerCommand extends Command {
   @override
   final String name = 'runner';
@@ -27,36 +29,24 @@ class StartBuildRunnerCommand extends Command {
   @override
   Future<void> run() async {
     final args = argResults!;
-    final collection = entrypoint.getPackages();
-    final flutterExec = entrypoint.useFvm ? 'fvm flutter' : 'flutter';
-    final availablePackages = collection.packages
-        .where((e) => e.containsDependency('build_runner'))
-        .map((e) => e.name)
-        .toList();
+    final helper = PackagesHelper(
+      entrypoint: entrypoint,
+      packages: entrypoint.getPackages(),
+      flutterExec: entrypoint.useFvm ? 'fvm flutter' : 'flutter',
+    );
 
     if (args.wasParsed('build')) {
       final name = args.arguments[1];
-      final package = collection.find(name: name);
-      if (package != null) {
-        await entrypoint.startBuildRunner(
-          package: package,
-          flutterExecutable: flutterExec,
-        );
-      } else {
-        throw UsageException(
-          'Package "$name" not found.',
-          'Available packages: $availablePackages',
-        );
-      }
+      await helper.prepareSingle(
+        name: name,
+        pubget: true,
+        buildRunner: true,
+      );
     } else if (args.wasParsed('build-recursive')) {
-      print('Start generating for packages: $availablePackages\n');
-
-      for (final package in collection.packages) {
-        await entrypoint.startBuildRunner(
-          package: package,
-          flutterExecutable: flutterExec,
-        );
-      }
+      await helper.prepareRecursive(
+        pubget: true,
+        buildRunner: true,
+      );
     } else {
       printUsage();
     }

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:args/command_runner.dart';
 import 'package:packo/packo.dart';
 import 'package:process_run/shell.dart';
 
@@ -127,6 +128,14 @@ class Entrypoint {
   }) async {
     _guardEntrypointContainsPackage(package);
 
+    if (!package.containsDependency('build_runner')) {
+      print(
+        'Skip "${package.name}" generation cause "build_runner" '
+        'dependency not registered by this package.\n\n',
+      );
+      return;
+    }
+
     final controller = ShellLinesController();
     final listen = controller.stream.listen(print);
     final dir = package.directory.path;
@@ -135,19 +144,6 @@ class Entrypoint {
       workingDirectory: dir,
       stdout: controller.sink,
     );
-
-    print('\n[${package.name}] pub get started at directory "$dir"');
-    await shell.run(
-      '$flutterExecutable pub get',
-    );
-
-    if (!package.containsDependency('build_runner')) {
-      print(
-        'Skip "${package.name}" generation cause "build_runner" '
-        'dependency not registered by this package.\n\n',
-      );
-      return;
-    }
 
     print('\n[${package.name}] build_runner started at directory "$dir"');
 
@@ -186,10 +182,13 @@ class Entrypoint {
 
   void _guardEntrypointContainsPackage(Package package) {
     final collection = getPackages();
+    final availablePackages = collection.packages.join('\n');
+
     final found = collection.find(name: package.name);
     if (found == null) {
-      throw Exception(
+      throw UsageException(
         'Cannot perform action to package outbound current entrypoint',
+        'Available packages: \n$availablePackages',
       );
     }
   }

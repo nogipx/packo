@@ -15,4 +15,7 @@ class PackagesCollection {
     final match = packages.where((e) => e.name == name);
     return match.isNotEmpty ? match.first : null;
   }
+
+  List<Package> filterByDependency(String dependency) =>
+      packages.where((e) => e.containsDependency(dependency)).toList();
 }

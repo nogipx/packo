@@ -10,7 +10,7 @@ class Package {
   final Directory directory;
 
   @override
-  String toString() => '$name: $version';
+  String toString() => '$name($version)';
 
   static Package? of(Directory directory) {
     final pubspec = _getPubspec(directory);
