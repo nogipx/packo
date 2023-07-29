@@ -1,5 +1,4 @@
 import 'package:expressions/expressions.dart';
-import 'package:intl/intl.dart';
 import 'package:packo/packo.dart';
 
 class YamlEvaluator extends ExpressionEvaluator {
@@ -43,15 +42,17 @@ class YamlEvaluator extends ExpressionEvaluator {
     }
 
     if (cmd.first == 'datetime') {
-      final formats = {
-        'nowFull': DateFormat('yyyy.MM.dd-HH.mm'),
+      final formats = <String, String Function(DateTime)>{
+        'nowFull': (dt) {
+          return '${dt.year}.${dt.month}.${dt.day}-${dt.hour}.${dt.minute}';
+        },
       };
 
       final name = cmd.firstWhereOrNull(formats.keys.contains);
       final format = formats[name];
 
       if (format != null) {
-        final date = format.format(DateTime.now());
+        final date = format(DateTime.now());
         return _prefixed(cmd, date);
       }
       return;
