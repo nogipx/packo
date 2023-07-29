@@ -1,3 +1,6 @@
+# [0.4.0]
+* Bump stable version
+
 # [0.3.9]
 * Refactor build runner/pub get functions
 
