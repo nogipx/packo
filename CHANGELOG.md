@@ -1,3 +1,6 @@
+# [0.3.5]
+* Fix deps constraints
+
 # [0.3.4]
 * Fix executable
 
