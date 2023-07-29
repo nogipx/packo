@@ -1,3 +1,6 @@
+# [0.3.9]
+* Refactor build runner/pub get functions
+
 # [0.3.8]
 * Start pub get before checking build_runner exists
 
