@@ -21,22 +21,22 @@ Future<void> buildApp({
     },
   );
 
-  final normalizeEnvStep = StepNormalizeEnvProperties(
-    neededProperties: neededProperties,
-  );
+  // final normalizeEnvStep = StepNormalizeEnvProperties(
+  //   neededProperties: neededProperties,
+  // );
 
   final guardEnvStep = StepGuardEnvProperties(
     requiredProperties: neededProperties,
   );
 
   final buildCompositor = BuildCompositor()
-    ..setNext(StepGuardBuildSettings())
+    ..setNext(const StepGuardBuildSettings())
     ..setNext(collectEnvStep)
-    ..setNext(StepInjectSystemProperties())
+    ..setNext(const StepInjectSystemProperties())
     // ..setNext(normalizeEnvStep)
     ..setNext(guardEnvStep)
-    ..setNext(StepRunActualBuild())
-    ..setNext(StepMoveArtifacts());
+    ..setNext(const StepRunActualBuild())
+    ..setNext(const StepMoveArtifacts());
 
   await buildCompositor.run(
     settings: settings,

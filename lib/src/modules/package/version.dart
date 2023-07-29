@@ -27,12 +27,15 @@
 /// Provides version objects to enforce conformance to the Semantic Versioning 2.0 spec. The spec can be read at http://semver.org/
 library version;
 
+import 'package:meta/meta.dart';
+
 /// Provides immutable storage and comparison of semantic version numbers.
+@immutable
 class Version implements Comparable<Version> {
   static final RegExp _versionRegex =
-      RegExp(r"^([\d.]+)(-([0-9A-Za-z\-.]+))?(\+([0-9A-Za-z\-.]+))?$");
-  static final RegExp _buildRegex = RegExp(r"^[0-9A-Za-z\-.]+$");
-  static final RegExp _preReleaseRegex = RegExp(r"^[0-9A-Za-z\-]+$");
+      RegExp(r'^([\d.]+)(-([0-9A-Za-z\-.]+))?(\+([0-9A-Za-z\-.]+))?$');
+  static final RegExp _buildRegex = RegExp(r'^[0-9A-Za-z\-.]+$');
+  static final RegExp _preReleaseRegex = RegExp(r'^[0-9A-Za-z\-]+$');
 
   /// The major number of the version, incremented when making breaking changes.
   final int major;
@@ -59,25 +62,25 @@ class Version implements Comparable<Version> {
   /// Throws a [FormatException] if the [String] content does not follow the character constraints defined above.
   /// Throes an [ArgumentError] if any of the other conditions are violated.
   Version(this.major, this.minor, this.patch,
-      {List<String> preRelease = const <String>[], this.build = ""})
+      {List<String> preRelease = const <String>[], this.build = ''})
       : _preRelease = preRelease {
-    for (int i = 0; i < _preRelease.length; i++) {
+    for (var i = 0; i < _preRelease.length; i++) {
       if (_preRelease[i].toString().trim().isEmpty) {
-        throw ArgumentError("preRelease segments must not be empty");
+        throw ArgumentError('preRelease segments must not be empty');
       }
       // Just in case
       _preRelease[i] = _preRelease[i].toString();
       if (!_preReleaseRegex.hasMatch(_preRelease[i])) {
-        throw FormatException(
-            "preRelease segments must only contain [0-9A-Za-z-]");
+        throw const FormatException(
+            'preRelease segments must only contain [0-9A-Za-z-]');
       }
     }
-    if (this.build.isNotEmpty && !_buildRegex.hasMatch(this.build)) {
-      throw FormatException("build must only contain [0-9A-Za-z-.]");
+    if (build.isNotEmpty && !_buildRegex.hasMatch(build)) {
+      throw const FormatException('build must only contain [0-9A-Za-z-.]');
     }
 
     if (major < 0 || minor < 0 || patch < 0) {
-      throw ArgumentError("Version numbers must be greater than 0");
+      throw ArgumentError('Version numbers must be greater than 0');
     }
   }
 
@@ -88,25 +91,25 @@ class Version implements Comparable<Version> {
   List<String> get preRelease => List<String>.from(_preRelease);
 
   /// Determines whether the left-hand [Version] represents a lower precedence than the right-hand [Version].
-  bool operator <(dynamic o) => o is Version && _compare(this, o) < 0;
+  bool operator <(Object o) => o is Version && _compare(this, o) < 0;
 
   /// Determines whether the left-hand [Version] represents an equal or lower precedence than the right-hand [Version].
-  bool operator <=(dynamic o) => o is Version && _compare(this, o) <= 0;
+  bool operator <=(Object o) => o is Version && _compare(this, o) <= 0;
 
   /// Determines whether the left-hand [Version] represents an equal precedence to the right-hand [Version].
   @override
-  bool operator ==(dynamic o) => o is Version && _compare(this, o) == 0;
+  bool operator ==(Object o) => o is Version && _compare(this, o) == 0;
 
   /// Determines whether the left-hand [Version] represents a greater precedence than the right-hand [Version].
-  bool operator >(dynamic o) => o is Version && _compare(this, o) > 0;
+  bool operator >(Object o) => o is Version && _compare(this, o) > 0;
 
   /// Determines whether the left-hand [Version] represents an equal or greater precedence than the right-hand [Version].
-  bool operator >=(dynamic o) => o is Version && _compare(this, o) >= 0;
+  bool operator >=(Object o) => o is Version && _compare(this, o) >= 0;
 
   @override
   int compareTo(Version? other) {
     if (other == null) {
-      throw ArgumentError.notNull("other");
+      throw ArgumentError.notNull('other');
     }
 
     return _compare(this, other);
@@ -115,32 +118,32 @@ class Version implements Comparable<Version> {
   /// Creates a new [Version] with the [major] version number incremented.
   ///
   /// Also resets the [minor] and [patch] numbers to 0, and clears the [build] and [preRelease] information.
-  Version incrementMajor() => Version(this.major + 1, 0, 0);
+  Version incrementMajor() => Version(major + 1, 0, 0);
 
   /// Creates a new [Version] with the [minor] version number incremented.
   ///
   /// Also resets the [patch] number to 0, and clears the [build] and [preRelease] information.
-  Version incrementMinor() => Version(this.major, this.minor + 1, 0);
+  Version incrementMinor() => Version(major, minor + 1, 0);
 
   /// Creates a new [Version] with the [patch] version number incremented.
   ///
   /// Also clears the [build] and [preRelease] information.
-  Version incrementPatch() => Version(this.major, this.minor, this.patch + 1);
+  Version incrementPatch() => Version(major, minor, patch + 1);
 
   /// Creates a new [Version] with the right-most numeric [preRelease] segment incremented.
   /// If no numeric segment is found, one will be added with the value "1".
   ///
   /// If this [Version] is not a pre-release version, an Exception will be thrown.
   Version incrementPreRelease() {
-    if (!this.isPreRelease) {
+    if (!isPreRelease) {
       throw Exception(
-          "Cannot increment pre-release on a non-pre-release [Version]");
+          'Cannot increment pre-release on a non-pre-release [Version]');
     }
-    var newPreRelease = this.preRelease;
+    final newPreRelease = preRelease;
 
     var found = false;
     for (var i = newPreRelease.length - 1; i >= 0; i--) {
-      var segment = newPreRelease[i];
+      final segment = newPreRelease[i];
       if (Version._isNumeric(segment)) {
         var intVal = int.parse(segment);
         intVal++;
@@ -150,11 +153,10 @@ class Version implements Comparable<Version> {
       }
     }
     if (!found) {
-      newPreRelease.add("1");
+      newPreRelease.add('1');
     }
 
-    return Version(this.major, this.minor, this.patch,
-        preRelease: newPreRelease);
+    return Version(major, minor, patch, preRelease: newPreRelease);
   }
 
   /// Returns a [String] representation of the [Version].
@@ -166,12 +168,12 @@ class Version implements Comparable<Version> {
   /// An example of such output would be "1.0.0-preRelease.segment+build.info".
   @override
   String toString() {
-    final StringBuffer output = StringBuffer("$major.$minor.$patch");
+    final output = StringBuffer('$major.$minor.$patch');
     if (_preRelease.isNotEmpty) {
       output.write("-${_preRelease.join('.')}");
     }
     if (build.trim().isNotEmpty) {
-      output.write("+${build.trim()}");
+      output.write('+${build.trim()}');
     }
     return output.toString();
   }
@@ -180,18 +182,20 @@ class Version implements Comparable<Version> {
   ///
   /// The string must conform to the specification at http://semver.org/
   /// Throws [FormatException] if the string is empty or does not conform to the spec.
-  static Version parse(String? versionString) {
+  factory Version.parse(String? versionString) {
     if (versionString?.trim().isEmpty ?? true) {
-      throw FormatException("Cannot parse empty string into version");
+      throw const FormatException('Cannot parse empty string into version');
     }
     if (!_versionRegex.hasMatch(versionString!)) {
-      throw FormatException("Not a properly formatted version string");
+      throw const FormatException('Not a properly formatted version string');
     }
     final Match m = _versionRegex.firstMatch(versionString)!;
-    final String version = m.group(1)!;
+    final version = m.group(1)!;
 
-    int? major, minor, patch;
-    final List<String> parts = version.split(".");
+    int? major;
+    int? minor;
+    int? patch;
+    final parts = version.split('.');
     major = int.parse(parts[0]);
     if (parts.length > 1) {
       minor = int.parse(parts[1]);
@@ -200,12 +204,12 @@ class Version implements Comparable<Version> {
       }
     }
 
-    final String preReleaseString = m.group(3) ?? "";
-    List<String> preReleaseList = <String>[];
+    final preReleaseString = m.group(3) ?? '';
+    var preReleaseList = <String>[];
     if (preReleaseString.trim().isNotEmpty) {
-      preReleaseList = preReleaseString.split(".");
+      preReleaseList = preReleaseString.split('.');
     }
-    final String build = m.group(5) ?? "";
+    final build = m.group(5) ?? '';
 
     return Version(major, minor ?? 0, patch ?? 0,
         build: build, preRelease: preReleaseList);
@@ -213,11 +217,11 @@ class Version implements Comparable<Version> {
 
   static int _compare(Version? a, Version? b) {
     if (a == null) {
-      throw ArgumentError.notNull("a");
+      throw ArgumentError.notNull('a');
     }
 
     if (b == null) {
-      throw ArgumentError.notNull("b");
+      throw ArgumentError.notNull('b');
     }
 
     if (a.major > b.major) return 1;
@@ -238,12 +242,12 @@ class Version implements Comparable<Version> {
     } else if (b.preRelease.isEmpty) {
       return -1;
     } else {
-      int preReleaseMax = a.preRelease.length;
+      var preReleaseMax = a.preRelease.length;
       if (b.preRelease.length > a.preRelease.length) {
         preReleaseMax = b.preRelease.length;
       }
 
-      for (int i = 0; i < preReleaseMax; i++) {
+      for (var i = 0; i < preReleaseMax; i++) {
         if (b.preRelease.length <= i) {
           return 1;
         } else if (a.preRelease.length <= i) {
@@ -252,12 +256,12 @@ class Version implements Comparable<Version> {
 
         if (a.preRelease[i] == b.preRelease[i]) continue;
 
-        final bool aNumeric = _isNumeric(a.preRelease[i]);
-        final bool bNumeric = _isNumeric(b.preRelease[i]);
+        final aNumeric = _isNumeric(a.preRelease[i]);
+        final bNumeric = _isNumeric(b.preRelease[i]);
 
         if (aNumeric && bNumeric) {
-          final double aNumber = double.parse(a.preRelease[i]);
-          final double bNumber = double.parse(b.preRelease[i]);
+          final aNumber = double.parse(a.preRelease[i]);
+          final bNumber = double.parse(b.preRelease[i]);
           if (aNumber > bNumber) {
             return 1;
           } else {
