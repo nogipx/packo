@@ -24,13 +24,12 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+// ignore_for_file: avoid_equals_and_hash_code_on_mutable_classes
+
 /// Provides version objects to enforce conformance to the Semantic Versioning 2.0 spec. The spec can be read at http://semver.org/
 library version;
 
-import 'package:meta/meta.dart';
-
 /// Provides immutable storage and comparison of semantic version numbers.
-@immutable
 class Version implements Comparable<Version> {
   static final RegExp _versionRegex =
       RegExp(r'^([\d.]+)(-([0-9A-Za-z\-.]+))?(\+([0-9A-Za-z\-.]+))?$');
