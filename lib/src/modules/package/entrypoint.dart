@@ -132,6 +132,7 @@ class Entrypoint {
         'Skip "${package.name}" generation cause "build_runner" '
         'dependency not registered by this package.\n\n',
       );
+      return;
     }
 
     final controller = ShellLinesController();

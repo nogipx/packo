@@ -1,3 +1,6 @@
+# [0.3.7]
+* Fix generate only if build_runner deps exists
+
 # [0.3.6]
 * Fix pub get and build runner working directory
 
