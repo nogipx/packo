@@ -136,13 +136,14 @@ class Entrypoint {
 
     final controller = ShellLinesController();
     final listen = controller.stream.listen(print);
+    final dir = package.directory.path;
 
     final shell = Shell(
-      workingDirectory: workdir.path,
+      workingDirectory: dir,
       stdout: controller.sink,
     );
 
-    print('\n[${package.name}] build_runner started.');
+    print('\n[${package.name}] build_runner started at directory "$dir"');
 
     await shell.run(
       '$flutterExecutable pub get',
@@ -164,13 +165,14 @@ class Entrypoint {
 
     final controller = ShellLinesController();
     final listen = controller.stream.listen(print);
+    final dir = package.directory.path;
 
     final shell = Shell(
-      workingDirectory: workdir.path,
+      workingDirectory: dir,
       stdout: controller.sink,
     );
 
-    print('\n[${package.name}] pub get started.');
+    print('\n[${package.name}] pub get started at directory "$dir"');
 
     await shell.run(
       '$flutterExecutable pub get',
