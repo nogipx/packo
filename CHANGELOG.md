@@ -1,3 +1,6 @@
+# [0.3.8]
+* Start pub get before checking build_runner exists
+
 # [0.3.7]
 * Fix generate only if build_runner deps exists
 
