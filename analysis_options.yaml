@@ -5,9 +5,6 @@ analyzer:
     - dart_code_metrics
   exclude:
     - "build/**"
-  strong-mode:
-    implicit-casts: false
-    implicit-dynamic: true
   errors:
     always_use_package_imports: error
     avoid_dynamic_calls: warning
@@ -104,7 +101,6 @@ linter:
     control_flow_in_finally: true
     empty_statements: true
     hash_and_equals: true
-    invariant_booleans: true
     iterable_contains_unrelated_type: true
     list_remove_unrelated_type: true
     literal_only_boolean_expressions: true
@@ -187,7 +183,6 @@ linter:
     prefer_conditional_assignment: true
     prefer_constructors_over_static_methods: true
     prefer_contains: true
-    prefer_equal_for_default_values: true
     prefer_final_fields: true
     prefer_final_in_for_each: true
     prefer_final_locals: true

@@ -1,5 +1,4 @@
 import 'package:args/command_runner.dart';
-import 'package:collection/collection.dart';
 import 'package:packo/packo.dart';
 
 class IncrementVersionsCommand extends Command {

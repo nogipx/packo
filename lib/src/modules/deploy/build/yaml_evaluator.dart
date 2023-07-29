@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:expressions/expressions.dart';
 import 'package:intl/intl.dart';
 import 'package:packo/packo.dart';
@@ -87,7 +86,6 @@ class YamlEvaluator extends ExpressionEvaluator {
       'us': '_',
     };
     final names = prefixes.keys;
-
     final name = cmd.firstWhereOrNull(names.contains);
 
     return name != null ? prefixes[name] ?? '' : '';

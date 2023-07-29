@@ -11,25 +11,25 @@ environment:
 
 dependencies:
   meta: ^1.8.0
-  collection: ^1.16.0
+  collection: ^1.18.0
 
   args: ^2.3.1
   dotenv: ^4.0.1
 
-  path: ^1.8.0
+#  path: ^1.8.0
   process_run: ^0.12.3+2
   yaml: ^3.1.1
   expressions: ^0.2.5
   cli_util: ^0.3.5
   intl: ^0.18.0
 
-  file: ^6.1.4
-  glob: ^2.1.1
-  pool: ^1.5.1
-  pub_semver: ^2.1.3
-  pub_updater: ^0.2.3
-  pubspec: ^2.3.0
-  yaml_edit: ^2.0.3
+#  file: ^6.1.4
+#  glob: ^2.1.1
+#  pool: ^1.5.1
+#  pub_semver: ^2.1.3
+#  pub_updater: ^0.2.3
+#  pubspec: ^2.3.0
+#  yaml_edit: ^2.0.3
 
 dev_dependencies:
   lints: ^2.0.0
