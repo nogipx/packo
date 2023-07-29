@@ -6,6 +6,7 @@ import 'package:args/command_runner.dart';
 import 'package:packo/packo.dart';
 
 import 'commands/_index.dart';
+import 'commands/helper/helpers_command.dart';
 
 Future<void> main(List<String> arguments) async {
   final dir = Directory.current;
@@ -21,6 +22,7 @@ Future<void> main(List<String> arguments) async {
     ..addCommand(IncrementVersionsCommand(entrypoint))
     ..addCommand(StartBuildRunnerCommand(entrypoint))
     ..addCommand(StartPubGetCommand(entrypoint))
+    ..addCommand(HelpersCommand(entrypoint))
     ..addCommand(BuildAppCommand());
 
   await runner.run(targetArguments).catchError((Object error) {
