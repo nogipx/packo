@@ -1,3 +1,6 @@
+# [0.3.6]
+* Fix pub get and build runner working directory
+
 # [0.3.5]
 * Fix deps constraints
 
