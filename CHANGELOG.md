@@ -1,3 +1,6 @@
+# [0.3.1]
+* Clean up code
+
 # [0.3.0]
 * Global refactor. Remove functionality to sync versions of several packages.
 
