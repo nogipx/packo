@@ -1,25 +1,25 @@
 import 'package:args/command_runner.dart';
 import 'package:packo/packo.dart';
 
-class StartBuildRunnerCommand extends Command {
+class StartPubGetCommand extends Command {
   @override
-  final String name = 'runner';
+  final String name = 'pubget';
   @override
-  final String description = 'Build runner';
+  final String description = 'Pub get';
 
   final Entrypoint entrypoint;
 
-  StartBuildRunnerCommand(this.entrypoint) {
+  StartPubGetCommand(this.entrypoint) {
     argParser
       ..addOption(
-        'build',
-        abbr: 'b',
-        help: 'Run build runner for package',
+        'get',
+        abbr: 'g',
+        help: 'Run pub get for package',
       )
       ..addFlag(
-        'buildRecursive',
+        'getRecursive',
         abbr: 'r',
-        help: 'Run build runner for all packages',
+        help: 'Run pub get for all packages',
         negatable: false,
       );
   }
@@ -29,16 +29,13 @@ class StartBuildRunnerCommand extends Command {
     final args = argResults!;
     final collection = entrypoint.getPackages();
     final flutterExec = entrypoint.useFvm ? 'fvm flutter' : 'flutter';
-    final availablePackages = collection.packages
-        .where((e) => e.containsDependency('build_runner'))
-        .map((e) => e.name)
-        .toList();
+    final availablePackages = collection.packages.map((e) => e.name).toList();
 
-    if (args.wasParsed('build')) {
+    if (args.wasParsed('get')) {
       final name = args.arguments[1];
       final package = collection.find(name: name);
       if (package != null) {
-        await entrypoint.startBuildRunner(
+        await entrypoint.startPubGet(
           package: package,
           flutterExecutable: flutterExec,
         );
@@ -48,11 +45,11 @@ class StartBuildRunnerCommand extends Command {
           'Available packages: $availablePackages',
         );
       }
-    } else if (args.wasParsed('buildRecursive')) {
-      print('Start generating for packages: $availablePackages\n');
+    } else if (args.wasParsed('getRecursive')) {
+      print('Start pub get for packages: $availablePackages\n');
 
       for (final package in collection.packages) {
-        await entrypoint.startBuildRunner(
+        await entrypoint.startPubGet(
           package: package,
           flutterExecutable: flutterExec,
         );

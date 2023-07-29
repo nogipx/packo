@@ -1,12 +1,18 @@
 import 'dart:io';
 
 import 'package:packo/packo.dart';
+import 'package:process_run/shell.dart';
 
 class Entrypoint {
   final Directory _workdir;
+  final bool useFvm;
+
   Directory get workdir => _workdir;
 
-  Entrypoint(Directory? workdir) : _workdir = workdir ?? Directory.current;
+  Entrypoint(
+    Directory? workdir, {
+    this.useFvm = false,
+  }) : _workdir = workdir ?? Directory.current;
 
   Iterable<Directory> getSubDirectories({
     bool recursive = true,
@@ -50,11 +56,12 @@ class Entrypoint {
 
   PackagesCollection getPackages({
     bool recursive = true,
+    bool withRootPackage = true,
   }) {
     final packagesDirs = getSubDirectories(recursive: recursive);
     final targetDirs = [
       ...packagesDirs,
-      workdir,
+      if (withRootPackage) workdir,
     ];
     final packages = targetDirs.map(Package.of).whereType<Package>().toList();
     final collection = PackagesCollection(
@@ -114,8 +121,63 @@ class Entrypoint {
     pubspec.writeAsStringSync(edited);
   }
 
-  Future<void> startBuildRunner(Package package) async {
+  Future<void> startBuildRunner({
+    required String flutterExecutable,
+    required Package package,
+  }) async {
     _guardEntrypointContainsPackage(package);
+
+    if (!package.containsDependency('build_runner')) {
+      print(
+        'Skip "${package.name}" generation cause "build_runner" '
+        'dependency not registered by this package.\n\n',
+      );
+    }
+
+    final controller = ShellLinesController();
+    final listen = controller.stream.listen(print);
+
+    final shell = Shell(
+      workingDirectory: workdir.path,
+      stdout: controller.sink,
+    );
+
+    print('\n[${package.name}] build_runner started.');
+
+    await shell.run(
+      '$flutterExecutable pub get',
+    );
+
+    await shell.run(
+      '$flutterExecutable pub run build_runner build --delete-conflicting-outputs',
+    );
+
+    controller.close();
+    await listen.cancel();
+  }
+
+  Future<void> startPubGet({
+    required String flutterExecutable,
+    required Package package,
+  }) async {
+    _guardEntrypointContainsPackage(package);
+
+    final controller = ShellLinesController();
+    final listen = controller.stream.listen(print);
+
+    final shell = Shell(
+      workingDirectory: workdir.path,
+      stdout: controller.sink,
+    );
+
+    print('\n[${package.name}] pub get started.');
+
+    await shell.run(
+      '$flutterExecutable pub get',
+    );
+
+    controller.close();
+    await listen.cancel();
   }
 
   void _guardEntrypointContainsPackage(Package package) {

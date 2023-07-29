@@ -67,7 +67,7 @@ class Package {
   bool containsDependency(String name) {
     final pubspec = this.pubspec;
     final text = pubspec.readAsStringSync();
-    final result = text.contains(name);
+    final result = text.contains('${name.replaceAll(':', '')}:');
     return result;
   }
 
