@@ -17,7 +17,7 @@ class StartPubGetCommand extends Command {
         help: 'Run pub get for package',
       )
       ..addFlag(
-        'getRecursive',
+        'get-recursive',
         abbr: 'r',
         help: 'Run pub get for all packages',
         negatable: false,
@@ -45,7 +45,7 @@ class StartPubGetCommand extends Command {
           'Available packages: $availablePackages',
         );
       }
-    } else if (args.wasParsed('getRecursive')) {
+    } else if (args.wasParsed('get-recursive')) {
       print('Start pub get for packages: $availablePackages\n');
 
       for (final package in collection.packages) {

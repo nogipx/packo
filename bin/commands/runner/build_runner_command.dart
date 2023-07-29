@@ -17,7 +17,7 @@ class StartBuildRunnerCommand extends Command {
         help: 'Run build runner for package',
       )
       ..addFlag(
-        'buildRecursive',
+        'build-recursive',
         abbr: 'r',
         help: 'Run build runner for all packages',
         negatable: false,
@@ -48,7 +48,7 @@ class StartBuildRunnerCommand extends Command {
           'Available packages: $availablePackages',
         );
       }
-    } else if (args.wasParsed('buildRecursive')) {
+    } else if (args.wasParsed('build-recursive')) {
       print('Start generating for packages: $availablePackages\n');
 
       for (final package in collection.packages) {
