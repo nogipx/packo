@@ -1,4 +1,5 @@
 import 'package:packo/packo.dart';
+import 'package:pub_semver/pub_semver.dart';
 
 class PackagesCollection {
   const PackagesCollection({
@@ -9,7 +10,7 @@ class PackagesCollection {
   List<Package> get packages =>
       _packages.where((e) => !excludePackages.contains(e.name)).toList();
 
-  List<Version> get versions => packages.map((e) => e.version).toList();
+  List<Version> get versions => packages.map((e) => e.currentVersion).toList();
 
   Package? find({required String name}) {
     final match = packages.where((e) => e.name == name);
@@ -17,5 +18,5 @@ class PackagesCollection {
   }
 
   List<Package> filterByDependency(String dependency) =>
-      packages.where((e) => e.containsDependency(dependency)).toList();
+      packages.where((e) => e.hasDependency(dependency)).toList();
 }

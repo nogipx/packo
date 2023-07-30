@@ -1,86 +1,78 @@
 import 'dart:io';
 
-import 'package:packo/packo.dart';
+import 'package:pub_semver/pub_semver.dart';
+import 'package:pubspec_parse/pubspec_parse.dart';
 
 class Package {
-  const Package._({
+  const Package({
     required this.directory,
-  });
+    required Pubspec pubspec,
+    required this.name,
+    required this.currentVersion,
+    required this.originalVersion,
+  }) : _pubspec = pubspec;
 
   final Directory directory;
+  final String name;
+  final Version originalVersion;
+  final Version currentVersion;
+  final Pubspec _pubspec;
 
   @override
-  String toString() => '$name($version)';
+  String toString() => '$name($currentVersion)';
 
-  static Package? of(Directory directory) {
-    final pubspec = _getPubspec(directory);
-    if (pubspec != null) {
-      return Package._(directory: directory);
-    } else {
+  bool hasDependency(String name) {
+    return hasProdDependency(name) || hasDevDependency(name);
+  }
+
+  bool hasProdDependency(String name) {
+    final dep = name.replaceAll(':', '');
+    return _pubspec.dependencies.containsKey(dep);
+  }
+
+  bool hasDevDependency(String name) {
+    final dep = name.replaceAll(':', '');
+    return _pubspec.devDependencies.containsKey(dep);
+  }
+
+  String get buildNumberString => currentVersion.build.join('.');
+
+  int? get buildNumber {
+    final formattedBuild = currentVersion.build.join('.');
+    if (currentVersion.build.length > 1) {
+      print('Build number is not int: "$formattedBuild"');
       return null;
     }
+
+    final number = int.tryParse(currentVersion.build.first.toString());
+    return number;
   }
 
-  String get name {
-    final lines = pubspec.readAsLinesSync();
-    final nameLine = lines.singleWhere(
-      (e) => e.startsWith('name'),
-      orElse: () => '',
+  Version? get nextBuildNumber {
+    final buildNumber = this.buildNumber;
+    if (buildNumber == null) {
+      print('Cannot increment build number format: "$buildNumberString"');
+      return null;
+    }
+
+    final newVersion = Version(
+      currentVersion.major,
+      currentVersion.minor,
+      currentVersion.patch,
+      build: (buildNumber + 1).toString(),
     );
-    if (nameLine.isNotEmpty) {
-      final name = nameLine.split(':')[1].trim();
-      return name;
-    } else {
-      return '';
-    }
+    return newVersion;
   }
 
-  File get pubspec {
-    final file = _getPubspec(directory);
-    if (file != null) {
-      return file;
-    }
-    throw Exception('pubspec not found at ${directory.path}.');
-  }
-
-  File get readme {
-    final file = File('${directory.path}/README.md');
-    if (file.existsSync()) {
-      return file;
-    }
-    throw Exception('Readme of "$name" package not found.');
-  }
-
-  Version get version {
-    final versionLine = pubspec.readAsLinesSync().singleWhere(
-          (e) => e.startsWith('version:'),
-          orElse: () => '',
-        );
-    if (versionLine.isNotEmpty) {
-      final versionString = versionLine.split(':')[1].trim();
-      final version = Version.parse(versionString);
-      return version;
-    }
-    throw Exception('cannot find version');
-  }
-
-  bool containsDependency(String name) {
-    final pubspec = this.pubspec;
-    final text = pubspec.readAsStringSync();
-    final result = text.contains('${name.replaceAll(':', '')}:');
-    return result;
-  }
-
-  static File? _getPubspec(Directory directory) {
-    final file = File('${directory.path}/pubspec.yaml');
-    if (file.existsSync()) {
-      return file;
-    } else {
-      final shortFile = File('${directory.path}/pubspec.yml');
-      if (shortFile.existsSync()) {
-        return shortFile;
-      }
-    }
-    return null;
+  Package copyWith({
+    Version? version,
+  }) {
+    return Package(
+      directory: directory,
+      name: name,
+      currentVersion: version ?? currentVersion,
+      pubspec: _pubspec,
+      originalVersion: originalVersion,
+    );
   }
 }

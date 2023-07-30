@@ -35,7 +35,7 @@ class HelpersCommand extends Command {
     if (args.wasParsed('current-version')) {
       final package = collection.find(name: targetPackageName);
       if (package != null) {
-        print(package.version.toString());
+        print(package.currentVersion.toString());
       } else {
         throw UsageException(
           'Package "$targetPackageName" not found.',

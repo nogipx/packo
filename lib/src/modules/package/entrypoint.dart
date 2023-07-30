@@ -39,7 +39,7 @@ class Entrypoint {
   }
 
   Package? get currentPackage {
-    return Package.of(_workdir);
+    return PackageProvider.of(_workdir);
   }
 
   Future<bool> containsPubspec() async {
@@ -64,7 +64,8 @@ class Entrypoint {
       ...packagesDirs,
       if (withRootPackage) workdir,
     ];
-    final packages = targetDirs.map(Package.of).whereType<Package>().toList();
+    final packages =
+        targetDirs.map(PackageProvider.of).whereType<Package>().toList();
     final collection = PackagesCollection(
       packages: packages,
     );
@@ -73,53 +74,38 @@ class Entrypoint {
   }
 
   void incrementMajor(Package package) {
-    _setVersion(
-      package: package,
-      version: package.version.incrementMajor(),
+    final updated = package.copyWith(
+      version: package.currentVersion.nextMajor,
     );
+    PackageProvider.savePackage(updated);
   }
 
   void incrementMinor(Package package) {
-    _setVersion(
-      package: package,
-      version: package.version.incrementMinor(),
+    final updated = package.copyWith(
+      version: package.currentVersion.nextMinor,
     );
+    PackageProvider.savePackage(updated);
   }
 
   void incrementPatch(Package package) {
-    _setVersion(
-      package: package,
-      version: package.version.incrementPatch(),
+    final updated = package.copyWith(
+      version: package.currentVersion.nextPatch,
     );
+    PackageProvider.savePackage(updated);
   }
 
   void incrementBuildNumber(Package package) {
-    final current = package.version;
-    final buildVersion = int.tryParse(current.build);
-
-    final newVersion = Version(
-      current.major,
-      current.minor,
-      current.patch,
-      build: buildVersion != null ? (buildVersion + 1).toString() : '',
+    final nextBuildNumber = package.nextBuildNumber;
+    if (nextBuildNumber == null) {
+      throw UsageException(
+        'Cannot increment build runner.',
+        'Only integer build allowed.',
+      );
+    }
+    final updated = package.copyWith(
+      version: nextBuildNumber,
     );
-
-    _setVersion(package: package, version: newVersion);
-  }
-
-  void _setVersion({
-    required Package package,
-    required Version version,
-  }) {
-    _guardEntrypointContainsPackage(package);
-
-    final pubspec = package.pubspec;
-    final pubspecContent = pubspec.readAsStringSync();
-    final edited = pubspecContent.replaceFirst(
-      'version: ${package.version}',
-      'version: $version',
-    );
-    pubspec.writeAsStringSync(edited);
+    PackageProvider.savePackage(updated);
   }
 
   Future<void> startBuildRunner({
@@ -128,7 +114,7 @@ class Entrypoint {
   }) async {
     _guardEntrypointContainsPackage(package);
 
-    if (!package.containsDependency('build_runner')) {
+    if (!package.hasDependency('build_runner')) {
       print(
         'Skip "${package.name}" generation cause "build_runner" '
         'dependency not registered by this package.\n\n',

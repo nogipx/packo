@@ -22,7 +22,7 @@ class StepGuardBuildSettings implements BuildStep<BuildTransaction> {
         test: () =>
             data.directory.path.isNotEmpty &&
             data.directory.existsSync() &&
-            Package.of(data.directory) != null,
+            PackageProvider.of(data.directory) != null,
         errorMessage:
             'Project directory must be a valid path of flutter project.',
       ),

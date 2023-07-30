@@ -13,7 +13,8 @@ dependencies:
   args: ^2.3.1
   dotenv: ^3.0.0
   process_run: ^0.12.3+2
-  yaml: ^3.1.1
+  pubspec_parse: ^1.2.1
+  pub_semver: ^2.1.2
   expressions: ^0.2.5
   cli_util: ^0.3.5
 
