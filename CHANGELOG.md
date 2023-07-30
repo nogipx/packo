@@ -1,3 +1,6 @@
+# [0.4.1]
+* Refactor to make package class immutable
+
 # [0.4.0]
 * Bump stable version
 
