@@ -1,20 +1,27 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:packo/packo.dart';
+import 'package:pub_semver/pub_semver.dart';
 import 'package:pubspec_parse/pubspec_parse.dart';
 
 abstract class PackageProvider {
   static Package? of(Directory directory) {
-    final pubspec = _pubspec(directory);
-    if (pubspec != null) {
-      return Package(
-        directory: directory,
-        name: pubspec.name,
-        pubspec: pubspec,
-        currentVersion: pubspec.version!,
-        originalVersion: pubspec.version!,
-      );
-    } else {
+    try {
+      final pubspec = _pubspec(directory);
+      if (pubspec != null) {
+        return Package(
+          directory: directory,
+          name: pubspec.name,
+          pubspec: pubspec,
+          currentVersion: pubspec.version ?? Version(0, 0, 0),
+          originalVersion: pubspec.version ?? Version(0, 0, 0),
+        );
+      } else {
+        return null;
+      }
+    } on Object catch (e) {
+      log('Cannot recognize package at "${directory.path}"');
       return null;
     }
   }

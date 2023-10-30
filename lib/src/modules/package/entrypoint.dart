@@ -23,8 +23,9 @@ class Entrypoint {
         .whereType<Directory>()
         .where((e) {
       final isDartTool = e.path.contains('.dart_tool');
-      final isSdk =
-          e.path.contains('flutter_sdk') || e.path.contains('ios/.symlinks');
+      final isSdk = e.path.contains('flutter_sdk') ||
+          e.path.contains('.symlinks') ||
+          e.path.contains('.plugin_symlinks');
       final isHiddenDirectory = _lastPathSegment(e.uri).startsWith('.');
 
       return !isSdk && !isDartTool && !isHiddenDirectory;
