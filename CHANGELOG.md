@@ -1,3 +1,6 @@
+# [0.4.2]
+* fix: can use Package without correct version
+
 # [0.4.1]
 * Refactor to make package class immutable
 
