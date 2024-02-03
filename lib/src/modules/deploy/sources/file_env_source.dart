@@ -2,7 +2,7 @@
 
 import 'dart:io';
 
-import 'package:dotenv/dotenv.dart' show load, env;
+import 'package:dotenv/dotenv.dart' show DotEnv;
 import 'package:packo/packo.dart';
 
 class FileEnvPropertySource implements EnvPropertySource {
@@ -34,8 +34,8 @@ class FileEnvPropertySource implements EnvPropertySource {
   }
 
   Iterable<EnvProperty> _loadPropertiesFromEnv(String envFilePath) {
-    load(envFilePath);
-    final map = env;
+    final dotenv = DotEnv()..load([envFilePath]);
+    final map = dotenv.map;
     final envProperties = map.keys.map(
       (key) => EnvProperty(key, value: map[key]),
     );
