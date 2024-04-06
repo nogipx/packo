@@ -1,3 +1,7 @@
+# [0.5.0]
+* feat: add ignoring fvm internal packages
+* feat: add internal dependency analyzer
+
 # [0.4.2]
 * fix: can use Package without correct version
 

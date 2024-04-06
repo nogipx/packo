@@ -6,7 +6,6 @@ repository: https://github.com/nogipx/packo
 executables:
   packo: packo
 
-
 environment:
   sdk: '>=2.19.4 <4.0.0'
 
