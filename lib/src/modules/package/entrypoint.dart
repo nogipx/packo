@@ -26,9 +26,10 @@ class Entrypoint {
       final isSdk = e.path.contains('flutter_sdk') ||
           e.path.contains('.symlinks') ||
           e.path.contains('.plugin_symlinks');
+      final isFromFvm = e.path.contains('.fvm');
       final isHiddenDirectory = _lastPathSegment(e.uri).startsWith('.');
 
-      return !isSdk && !isDartTool && !isHiddenDirectory;
+      return !isSdk && !isDartTool && !isHiddenDirectory && !isFromFvm;
     });
 
     return featurePackagesPath;
