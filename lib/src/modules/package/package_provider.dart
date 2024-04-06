@@ -20,7 +20,7 @@ abstract class PackageProvider {
       } else {
         return null;
       }
-    } on Object catch (e) {
+    } on Object catch (_) {
       log('Cannot recognize package at "${directory.path}"');
       return null;
     }

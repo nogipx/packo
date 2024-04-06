@@ -12,6 +12,8 @@ import 'package:yaml/yaml.dart' as yaml;
 
 import '../pub_cache.dart';
 
+typedef PackageResolver = Package? Function(PackageRef);
+
 class PackageRefImpl extends PackageRef {
   @override
   final String sourceType;
@@ -20,7 +22,7 @@ class PackageRefImpl extends PackageRef {
   @override
   final Version version;
 
-  Function? _resolver;
+  PackageResolver? _resolver;
 
   PackageRefImpl(this.sourceType, this.name, String ver)
       : version = Version.parse(ver);
@@ -30,7 +32,7 @@ class PackageRefImpl extends PackageRef {
         version = Version.parse(ver);
 
   factory PackageRefImpl.git(
-      String name, String ver, Map description, Function resolver) {
+      String name, String ver, Map description, PackageResolver resolver) {
     return GitPackageRefImpl(name, ver, description, resolver);
   }
 
@@ -39,14 +41,14 @@ class PackageRefImpl extends PackageRef {
   }
 
   @override
-  Package? resolve() => _resolver == null ? null : _resolver!(this);
+  Package? resolve() => _resolver == null ? null : _resolver!.call(this);
 }
 
 class GitPackageRefImpl extends PackageRefImpl {
   final Map _description;
 
   GitPackageRefImpl(
-      String name, String ver, this._description, Function resolver)
+      String name, String ver, this._description, PackageResolver resolver)
       : super('git', name, ver) {
     _resolver = resolver;
   }

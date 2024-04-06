@@ -51,7 +51,8 @@ class StepNormalizeEnvProperties
     /// but not contained in existed props.
     final neededPropsKeysNotInExisted = neededFastMap.values
         .where(
-          (e) => !filledExistedProps.containsKey(e) && e.defaultValue != null,
+          (e) =>
+              !filledExistedProps.containsKey(e.key) && e.defaultValue != null,
         )
         .map(
           (e) => MapEntry(e.key, e.copyWith(value: e.defaultValue)),
