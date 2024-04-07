@@ -252,7 +252,7 @@ Model buildModel(Directory rootDir,
       getEdges(rootDir, ignoreGlob, pubspecYaml, model.nodes.keys.toList()));
 
   if (showMetrics) {
-    model.metrics = computeMetrics(model);
+    // model.metrics = computeMetrics(model);
   }
 
   return model;

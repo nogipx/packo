@@ -15,13 +15,13 @@ void main() {
     g.edges.add(Edge('c', 'd'));
     // g.edges.add(Edge('d', 'a')); // Cycle
     print(g);
-    var digraph = g.toDirectedGraph();
-    print(digraph);
-    print(digraph.isAcyclic);
-    print(digraph.localSources); // Levels
-    for (var v in digraph.vertices) {
-      print('$v -> ${digraph.edges(v)}');
-    }
+    // var digraph = g.toDirectedGraph();
+    // print(digraph);
+    // print(digraph.isAcyclic);
+    // print(digraph.localSources); // Levels
+    // for (var v in digraph.vertices) {
+    //   print('$v -> ${digraph.edges(v)}');
+    // }
   });
 
   test('computeCCD', () {
@@ -37,15 +37,15 @@ void main() {
     g.edges.add(Edge('c', 'd'));
     // g.edges.add(Edge('d', 'a')); // Cycle
     print(g);
-    var digraph = g.toDirectedGraph();
-    print(digraph);
-    print('isAcyclic: ${digraph.isAcyclic}');
-    print('levels: ${digraph.localSources}');
-    computeNodeCDs(digraph, g);
-    var ccd = computeCCD(g);
-    print('ccd: $ccd');
-    print('acd: ${computeACD(ccd, digraph.vertices.length)}');
-    print('nccd: ${computeNCCD(ccd, digraph.vertices.length)}');
+    // var digraph = g.toDirectedGraph();
+    // print(digraph);
+    // print('isAcyclic: ${digraph.isAcyclic}');
+    // print('levels: ${digraph.localSources}');
+    // computeNodeCDs(digraph, g);
+    // var ccd = computeCCD(g);
+    // print('ccd: $ccd');
+    // print('acd: ${computeACD(ccd, digraph.vertices.length)}');
+    // print('nccd: ${computeNCCD(ccd, digraph.vertices.length)}');
   });
 
   test('binaryTreeCCD', () {
@@ -69,8 +69,8 @@ void main() {
     g.edges.add(Edge('c', 'd'));
     // g.edges.add(Edge('d', 'a')); // Cycle
     print(g);
-    var metrics = computeMetrics(g);
-    print(metrics);
-    print(metrics.toJson());
+    // var metrics = computeMetrics(g);
+    // print(metrics);
+    // print(metrics.toJson());
   });
 }

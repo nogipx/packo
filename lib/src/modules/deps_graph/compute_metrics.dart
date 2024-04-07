@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:darq/darq.dart';
-import 'package:directed_graph/directed_graph.dart';
+// import 'package:directed_graph/directed_graph.dart';
 
 import '_index.dart';
 
@@ -11,25 +11,25 @@ const precision = 2;
 /// Compute the component dependency of each node.
 /// The component dependency (CD) is the number of nodes a particular node depends on
 /// directly or transitively, including itself.
-void computeNodeCDs(DirectedGraph<String> graph, @modified Model model) {
-  for (var v in graph.vertices) {
-    model.nodes[v]!.cd = 0;
-  }
-  for (var v in graph.vertices) {
-    var nodes = [v];
-    var visited = <String>{};
-    while (nodes.isNotEmpty) {
-      var next = nodes.removeAt(0);
-      // Only visit each node once
-      if (!visited.contains(next)) {
-        // Solution to += error: https://stackoverflow.com/a/66472892
-        model.nodes[v]!.cd = model.nodes[v]!.cd! + 1;
-        visited.add(next);
-        nodes.addAll(graph.edges(next));
-      }
-    }
-  }
-}
+// void computeNodeCDs(DirectedGraph<String> graph, @modified Model model) {
+//   for (var v in graph.vertices) {
+//     model.nodes[v]!.cd = 0;
+//   }
+//   for (var v in graph.vertices) {
+//     var nodes = [v];
+//     var visited = <String>{};
+//     while (nodes.isNotEmpty) {
+//       var next = nodes.removeAt(0);
+//       // Only visit each node once
+//       if (!visited.contains(next)) {
+//         // Solution to += error: https://stackoverflow.com/a/66472892
+//         model.nodes[v]!.cd = model.nodes[v]!.cd! + 1;
+//         visited.add(next);
+//         nodes.addAll(graph.edges(next));
+//       }
+//     }
+//   }
+// }
 
 /// Compute node inDegree, outDegree, isOrphan, and instability.
 /// inDegree is the number of nodes that depend on this node.
@@ -39,18 +39,18 @@ void computeNodeCDs(DirectedGraph<String> graph, @modified Model model) {
 /// Instability = outDegree / (inDegree + outDegree)
 /// In general, node instability should decrease in the direction of dependency.
 /// In other words, lower level nodes should be more stable and more reusable than higher level nodes.
-void computeNodeDegreeMetrics(
-    DirectedGraph<String> graph, @modified Model model) {
-  for (var v in graph.vertices) {
-    model.nodes[v]!.inDegree = graph.inDegree(v);
-    model.nodes[v]!.outDegree = graph.outDegree(v);
-    if (model.nodes[v]!.inDegree! + model.nodes[v]!.outDegree! > 0) {
-      model.nodes[v]!.instability = (model.nodes[v]!.outDegree! /
-              (model.nodes[v]!.inDegree! + model.nodes[v]!.outDegree!))
-          .toPrecision(precision) as double?;
-    }
-  }
-}
+// void computeNodeDegreeMetrics(
+//     DirectedGraph<String> graph, @modified Model model) {
+//   for (var v in graph.vertices) {
+//     model.nodes[v]!.inDegree = graph.inDegree(v);
+//     model.nodes[v]!.outDegree = graph.outDegree(v);
+//     if (model.nodes[v]!.inDegree! + model.nodes[v]!.outDegree! > 0) {
+//       model.nodes[v]!.instability = (model.nodes[v]!.outDegree! /
+//               (model.nodes[v]!.inDegree! + model.nodes[v]!.outDegree!))
+//           .toPrecision(precision) as double?;
+//     }
+//   }
+// }
 
 /// Return the cumulative component dependency, which is the sum of all component dependencies.
 /// The CCD can be interpreted as the total "coupling" of the graph.
@@ -135,30 +135,30 @@ extension NumberRounding on num {
   }
 }
 
-Metrics computeMetrics(@modified Model model) {
-  var digraph = model.toDirectedGraph();
-  computeNodeCDs(digraph, model);
-  computeNodeDegreeMetrics(digraph, model);
-  computeNodeSlocs(model);
-  var ccd = computeCCD(model);
-  var orphans = computeOrphans(model);
-  var numNodes = model.nodes.length;
-  var numEdges = model.edges.length;
-  var avgDegree = (numEdges / numNodes).toPrecision(precision);
-  var totalSloc = computeTotalSloc(model);
-  var avgSloc = totalSloc / numNodes;
-  var firstCycle = digraph.cycle.map((node) => node).toList();
-  var metrics = Metrics(
-      firstCycle.isEmpty,
-      firstCycle,
-      numNodes,
-      numEdges,
-      avgDegree as double,
-      orphans,
-      ccd,
-      computeACD(ccd, numNodes).toPrecision(precision) as double,
-      computeNCCD(ccd, numNodes).toPrecision(precision) as double,
-      totalSloc,
-      avgSloc.toPrecision(precision) as double);
-  return metrics;
-}
+// Metrics computeMetrics(@modified Model model) {
+//   var digraph = model.toDirectedGraph();
+//   computeNodeCDs(digraph, model);
+//   computeNodeDegreeMetrics(digraph, model);
+//   computeNodeSlocs(model);
+//   var ccd = computeCCD(model);
+//   var orphans = computeOrphans(model);
+//   var numNodes = model.nodes.length;
+//   var numEdges = model.edges.length;
+//   var avgDegree = (numEdges / numNodes).toPrecision(precision);
+//   var totalSloc = computeTotalSloc(model);
+//   var avgSloc = totalSloc / numNodes;
+//   var firstCycle = digraph.cycle.map((node) => node).toList();
+//   var metrics = Metrics(
+//       firstCycle.isEmpty,
+//       firstCycle,
+//       numNodes,
+//       numEdges,
+//       avgDegree as double,
+//       orphans,
+//       ccd,
+//       computeACD(ccd, numNodes).toPrecision(precision) as double,
+//       computeNCCD(ccd, numNodes).toPrecision(precision) as double,
+//       totalSloc,
+//       avgSloc.toPrecision(precision) as double);
+//   return metrics;
+// }

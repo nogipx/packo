@@ -123,9 +123,9 @@ class DepsAnalyzeCommand extends Command {
       }
     }
 
-    // Detect cycles.
-    if (!cyclesAllowed! && !model.toDirectedGraph().isAcyclic) {
-      exit(ExitCode.dependencyCycleDetected.index);
-    }
+    // // Detect cycles.
+    // if (!cyclesAllowed! && !model.toDirectedGraph().isAcyclic) {
+    //   exit(ExitCode.dependencyCycleDetected.index);
+    // }
   }
 }

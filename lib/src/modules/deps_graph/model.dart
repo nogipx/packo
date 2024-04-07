@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:directed_graph/directed_graph.dart';
+// import 'package:directed_graph/directed_graph.dart';
 
 import '_index.dart';
 
@@ -59,25 +59,25 @@ ${metrics ?? ''}
     }
   }
 
-  /// Converts a Model to a [DirectedGraph] from the `directed_graph` library.
-  /// May be useful for further analysis of the dependency graph.
-  DirectedGraph<String> toDirectedGraph() {
-    var edgeMap = <String, Set<String>>{};
-
-    // Add nodes
-    for (var node in nodes.values) {
-      if (!edgeMap.containsKey(node.id)) {
-        edgeMap[node.id] = {};
-      }
-    }
-
-    // Add edges
-    for (var edge in edges) {
-      edgeMap[edge.from]!.add(edge.to);
-    }
-
-    return DirectedGraph<String>(edgeMap);
-  }
+  // /// Converts a Model to a [DirectedGraph] from the `directed_graph` library.
+  // /// May be useful for further analysis of the dependency graph.
+  // DirectedGraph<String> toDirectedGraph() {
+  //   var edgeMap = <String, Set<String>>{};
+  //
+  //   // Add nodes
+  //   for (var node in nodes.values) {
+  //     if (!edgeMap.containsKey(node.id)) {
+  //       edgeMap[node.id] = {};
+  //     }
+  //   }
+  //
+  //   // Add edges
+  //   for (var edge in edges) {
+  //     edgeMap[edge.from]!.add(edge.to);
+  //   }
+  //
+  //   return DirectedGraph<String>(edgeMap);
+  // }
 }
 
 /// Used in [Model.getOutput].
