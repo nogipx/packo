@@ -1,3 +1,8 @@
+# [0.5.1]
+* fix: remove deps_graph analyzing
+* fix: downgrade some deps to match old flutter versions
+* fix: remove completely deps_graph
+
 # [0.5.0]
 * feat: add ignoring fvm internal packages
 * feat: add internal dependency analyzer

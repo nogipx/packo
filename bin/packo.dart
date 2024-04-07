@@ -22,7 +22,6 @@ Future<void> main(List<String> arguments) async {
     ..addCommand(StartBuildRunnerCommand(entrypoint))
     ..addCommand(StartPubGetCommand(entrypoint))
     ..addCommand(HelpersCommand(entrypoint))
-    ..addCommand(DepsAnalyzeCommand(entrypoint))
     ..addCommand(BuildAppCommand());
 
   await runner.run(targetArguments).catchError((Object error) {
